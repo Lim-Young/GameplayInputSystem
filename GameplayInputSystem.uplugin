@@ -1,0 +1,23 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "GameplayInputSystem",
+	"Description": "A global input system based on GameplayTag, supporting the creation of custom interaction events through instantiation, making it particularly suitable for crafting QTE inputs.",
+	"Category": "Other",
+	"CreatedBy": "Lim Young",
+	"CreatedByURL": "https://github.com/Lim-Young",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "GameplayInputSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
