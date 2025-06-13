@@ -18,6 +18,11 @@
 			"Name": "GameplayInputSystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "GameplayInteractionSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }
