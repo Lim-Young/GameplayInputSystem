@@ -22,10 +22,10 @@ struct FGameplayInteractionDescription
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
 	TObjectPtr<UGameplayInteractionProcessor> InteractionProcessor;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayInteractionWidgetConfig WidgetConfig;
 
 	bool Valid() const;
