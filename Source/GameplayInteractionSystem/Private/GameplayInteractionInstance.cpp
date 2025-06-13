@@ -29,7 +29,15 @@ void UGameplayInteractionInstance::InitializeInteractionInstance(
 	InteractionProcessor->Initialize(this);
 }
 
-void UGameplayInteractionInstance::CompleteInteraction(const bool bSuccess) const
+void UGameplayInteractionInstance::Cleanup()
+{
+	// Clean up the interaction instance
+	OnInteractionSuccess.Clear();
+	OnInteractionFailed.Clear();
+	OnInteractionComplete.Clear();
+}
+
+void UGameplayInteractionInstance::CompleteInteraction(const bool bSuccess)
 {
 	if (bSuccess)
 	{
@@ -41,4 +49,8 @@ void UGameplayInteractionInstance::CompleteInteraction(const bool bSuccess) cons
 	}
 
 	OnInteractionComplete.Broadcast();
+
+	Cleanup();
+
+	MarkAsGarbage();
 }

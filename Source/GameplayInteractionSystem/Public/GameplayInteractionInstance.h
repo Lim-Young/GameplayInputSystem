@@ -65,5 +65,6 @@ public:
 	void InitializeInteractionInstance(const FGameplayInteractionDescription& InteractionDescription);
 
 private:
-	void CompleteInteraction(const bool bSuccess) const;
+	void Cleanup();
+	void CompleteInteraction(const bool bSuccess);
 };
