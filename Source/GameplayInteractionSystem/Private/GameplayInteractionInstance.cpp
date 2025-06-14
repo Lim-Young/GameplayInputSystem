@@ -39,6 +39,8 @@ void UGameplayInteractionInstance::Cleanup()
 	OnInteractionFailed.Clear();
 	OnInteractionComplete.Clear();
 
+	InteractionProcessor->Cleanup();
+
 	FWorldDelegates::OnWorldCleanup.RemoveAll(this);
 	RemoveFromRoot();
 }

@@ -27,8 +27,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Interaction Processor")
 	void OnGameplayInputEvent(FGameplayTag InputTag, EGameplayInputType InputType);
 
+public:
 	void Initialize(UGameplayInteractionInstance* InteractionInstance);
-	virtual void BeginDestroy() override;
+	void Cleanup();
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Interaction Processor")

@@ -17,10 +17,8 @@ void UGameplayInteractionProcessor::Initialize(UGameplayInteractionInstance* Int
 		this, &UGameplayInteractionProcessor::OnGameplayInputEvent);
 }
 
-void UGameplayInteractionProcessor::BeginDestroy()
+void UGameplayInteractionProcessor::Cleanup()
 {
-	UObject::BeginDestroy();
-
 	if (IsValid(GameplayInputSubsystem))
 	{
 		GameplayInputSubsystem->OnGameplayInputEvent.RemoveDynamic(
