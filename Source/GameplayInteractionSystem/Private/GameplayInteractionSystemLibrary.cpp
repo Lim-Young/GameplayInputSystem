@@ -13,9 +13,9 @@ UGameplayInteractionInstance* UGameplayInteractionSystemLibrary::CreateGameplayI
 		return nullptr;
 	}
 
-	UGameplayInteractionInstance* NewInstance = NewObject<UGameplayInteractionInstance>(WorldContextObject);
-	if (NewInstance)
+	if (UGameplayInteractionInstance* NewInstance = NewObject<UGameplayInteractionInstance>(WorldContextObject))
 	{
+		NewInstance->AddToRoot();
 		NewInstance->InitializeInteractionInstance(Description);
 		return NewInstance;
 	}

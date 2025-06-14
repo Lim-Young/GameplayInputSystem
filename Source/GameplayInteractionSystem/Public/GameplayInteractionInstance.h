@@ -66,5 +66,6 @@ public:
 
 private:
 	void Cleanup();
+	void OnWorldCleanup(UWorld* World, bool bArg, bool bCond);
 	void CompleteInteraction(const bool bSuccess);
 };
