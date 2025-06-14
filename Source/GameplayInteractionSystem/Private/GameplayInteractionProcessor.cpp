@@ -3,8 +3,16 @@
 
 #include "GameplayInteractionProcessor.h"
 
-void UGameplayInteractionProcessor::OnGameplayInputEvent_Implementation(FGameplayTag InputTag,
-	EGameplayInputType InputType)
+void UGameplayInteractionProcessor::ProcessGameplayInputEvent(const FGameplayTag& InputTag,
+                                                              const EGameplayInputType InputType)
+{
+	OwnerInteractionInstance->ProcessGameplayInputEvent(InputTag, InputType);
+
+	OnGameplayInputEvent(InputTag, InputType);
+}
+
+void UGameplayInteractionProcessor::OnGameplayInputEvent_Implementation(const FGameplayTag& InputTag,
+                                                                        const EGameplayInputType InputType)
 {
 }
 
@@ -14,7 +22,7 @@ void UGameplayInteractionProcessor::Initialize(UGameplayInteractionInstance* Int
 	OwnerInteractionInstance = InteractionInstance;
 
 	GameplayInputSubsystem->OnGameplayInputEvent.AddDynamic(
-		this, &UGameplayInteractionProcessor::OnGameplayInputEvent);
+		this, &UGameplayInteractionProcessor::ProcessGameplayInputEvent);
 }
 
 void UGameplayInteractionProcessor::Cleanup()
@@ -22,7 +30,7 @@ void UGameplayInteractionProcessor::Cleanup()
 	if (IsValid(GameplayInputSubsystem))
 	{
 		GameplayInputSubsystem->OnGameplayInputEvent.RemoveDynamic(
-			this, &UGameplayInteractionProcessor::OnGameplayInputEvent);
+			this, &UGameplayInteractionProcessor::ProcessGameplayInputEvent);
 	}
 }
 
@@ -34,6 +42,7 @@ void UGameplayInteractionProcessor::CompleteInteraction(const bool bSuccess) con
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("UGameplayInteractionProcessor::CompleteInteraction - OwnerInteractionInstance is invalid"));
+		UE_LOG(LogTemp, Error,
+		       TEXT("UGameplayInteractionProcessor::CompleteInteraction - OwnerInteractionInstance is invalid"));
 	}
 }

@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayInputSubsystem.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Object.h"
+#include "Widgets/Layout/Anchors.h"
 #include "GameplayInteractionInstance.generated.h"
 
 class UGameplayInteractionProcessor;
@@ -13,8 +16,20 @@ struct FGameplayInteractionWidgetConfig
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Interaction")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Interaction",
+		meta = (MustImplement = "/Script/GameplayInteractionSystem.GameplayInteractionWidgetInterface"))
 	TSubclassOf<UUserWidget> InteractionWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Interaction")
+	FAnchors WidgetAnchors = FAnchors(0.5f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Interaction")
+	FVector2D WidgetAlignment = FVector2D(0.5f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Interaction")
+	FVector2D WidgetDesiredSize = FVector2D(64.0f);
+
+	bool Valid() const;
 };
 
 USTRUCT(BlueprintType)
@@ -47,6 +62,9 @@ class GAMEPLAYINTERACTIONSYSTEM_API UGameplayInteractionInstance : public UObjec
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionComplete);
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractionInputEvent, const FGameplayTag&, InputTag,
+	                                             const EGameplayInputType, InputType);
+
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Interaction")
 	FOnInteractionComplete OnInteractionSuccess;
 
@@ -56,9 +74,15 @@ class GAMEPLAYINTERACTIONSYSTEM_API UGameplayInteractionInstance : public UObjec
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Interaction")
 	FOnInteractionComplete OnInteractionComplete;
 
+	UPROPERTY(BlueprintAssignable, Category = "Gameplay Interaction")
+	FOnInteractionInputEvent OnInteractionInputEvent;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UGameplayInteractionProcessor> InteractionProcessor;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> InteractionWidget;
 
 public:
 	virtual void BeginDestroy() override;
@@ -67,5 +91,6 @@ public:
 private:
 	void Cleanup();
 	void OnWorldCleanup(UWorld* World, bool bArg, bool bCond);
+	void ProcessGameplayInputEvent(const FGameplayTag& InputTag, const EGameplayInputType InputType) const;
 	void CompleteInteraction(const bool bSuccess);
 };

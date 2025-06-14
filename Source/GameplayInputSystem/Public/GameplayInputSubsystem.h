@@ -25,8 +25,8 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputSubsystem : public UGameInstanceSubs
 {
 	GENERATED_BODY()
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputEvent, FGameplayTag, InputTag, EGameplayInputType,
-	                                             InputType);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputEvent, const FGameplayTag&, InputTag,
+	                                             const EGameplayInputType, InputType);
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Input System|Events")
@@ -34,5 +34,5 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System", meta = (GameplayTagFilter = GameplayInput))
-	void InjectGameplayInput(const FGameplayTag& InputTag, const EGameplayInputType InputType) const;
+	void InjectGameplayInput(const FGameplayTag& InputTag, const EGameplayInputType InputType);
 };

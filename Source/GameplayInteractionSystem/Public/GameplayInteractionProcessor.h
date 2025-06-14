@@ -23,9 +23,12 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<UGameplayInteractionInstance> OwnerInteractionInstance;
 
-public:
+	UFUNCTION()
+	void ProcessGameplayInputEvent(const FGameplayTag& InputTag, EGameplayInputType InputType);
+
+protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Interaction Processor")
-	void OnGameplayInputEvent(FGameplayTag InputTag, EGameplayInputType InputType);
+	void OnGameplayInputEvent(const FGameplayTag& InputTag, const EGameplayInputType InputType);
 
 public:
 	void Initialize(UGameplayInteractionInstance* InteractionInstance);
