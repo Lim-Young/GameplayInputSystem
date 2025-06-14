@@ -16,17 +16,32 @@ void UGameplayInteractionProcessor::OnGameplayInputEvent_Implementation(const FG
 {
 }
 
+void UGameplayInteractionProcessor::PostInitialize_Implementation()
+{
+}
+
+void UGameplayInteractionProcessor::PreCleanup_Implementation()
+{
+}
+
 void UGameplayInteractionProcessor::Initialize(UGameplayInteractionInstance* InteractionInstance)
 {
+	OwnerWorld = GetWorld();
+	ensureMsgf(OwnerWorld, TEXT("UGameplayInteractionProcessor::Initialize - OwnerWorld is invalid"));
+
 	GameplayInputSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UGameplayInputSubsystem>();
 	OwnerInteractionInstance = InteractionInstance;
 
 	GameplayInputSubsystem->OnGameplayInputEvent.AddDynamic(
 		this, &UGameplayInteractionProcessor::ProcessGameplayInputEvent);
+
+	PostInitialize();
 }
 
 void UGameplayInteractionProcessor::Cleanup()
 {
+	PreCleanup();
+
 	if (IsValid(GameplayInputSubsystem))
 	{
 		GameplayInputSubsystem->OnGameplayInputEvent.RemoveDynamic(
@@ -42,7 +57,7 @@ void UGameplayInteractionProcessor::CompleteInteraction(const bool bSuccess) con
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error,
+		UE_LOG(LogTemp, Warning,
 		       TEXT("UGameplayInteractionProcessor::CompleteInteraction - OwnerInteractionInstance is invalid"));
 	}
 }

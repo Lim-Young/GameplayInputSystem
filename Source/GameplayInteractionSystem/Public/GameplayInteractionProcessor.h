@@ -16,6 +16,10 @@ class GAMEPLAYINTERACTIONSYSTEM_API UGameplayInteractionProcessor : public UObje
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY()
+	TObjectPtr<UWorld> OwnerWorld;
+
 private:
 	UPROPERTY(Transient)
 	TObjectPtr<UGameplayInputSubsystem> GameplayInputSubsystem;
@@ -29,6 +33,12 @@ private:
 protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Interaction Processor")
 	void OnGameplayInputEvent(const FGameplayTag& InputTag, const EGameplayInputType InputType);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Interaction Processor")
+	void PostInitialize();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Interaction Processor")
+	void PreCleanup();
 
 public:
 	void Initialize(UGameplayInteractionInstance* InteractionInstance);
