@@ -59,6 +59,8 @@ void UGameplayInteractionInstance::InitializeInteractionInstance(
 	InteractionWidget->SetDesiredSizeInViewport(InteractionDescription.WidgetConfig.WidgetDesiredSize);
 	InteractionWidget->SetAnchorsInViewport(InteractionDescription.WidgetConfig.WidgetAnchors);
 	InteractionWidget->SetAlignmentInViewport(InteractionDescription.WidgetConfig.WidgetAlignment);
+
+	IGameplayInteractionWidgetInterface::Execute_OnInitializeInteraction(InteractionWidget);
 }
 
 void UGameplayInteractionInstance::Cleanup()
@@ -69,6 +71,8 @@ void UGameplayInteractionInstance::Cleanup()
 	OnInteractionComplete.Clear();
 
 	InteractionProcessor->Cleanup();
+
+	IGameplayInteractionWidgetInterface::Execute_Cleanup(InteractionWidget);
 
 	FWorldDelegates::OnWorldCleanup.RemoveAll(this);
 	RemoveFromRoot();
