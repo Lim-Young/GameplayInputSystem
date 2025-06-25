@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayInputSubsystem.h"
 #include "GameplayTagContainer.h"
+#include "Components/WidgetComponent.h"
 #include "UObject/Object.h"
 #include "Widgets/Layout/Anchors.h"
 #include "GameplayInteractionInstance.generated.h"
@@ -87,7 +88,8 @@ private:
 
 public:
 	virtual void BeginDestroy() override;
-	void InitializeInteractionInstance(const FGameplayInteractionDescription& InteractionDescription);
+	void InitializeInteractionInstance(const FGameplayInteractionDescription& InteractionDescription,
+	                                   UWidgetComponent* InteractionWidgetComponent = nullptr);
 
 	void DestroyInteractionInstance();
 

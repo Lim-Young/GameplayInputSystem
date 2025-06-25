@@ -15,8 +15,9 @@ class GAMEPLAYINTERACTIONSYSTEM_API UGameplayInteractionSystemLibrary : public U
 {
 	GENERATED_BODY()
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Interaction System", meta = (WorldContext = "WorldContextObject"))
 	static UGameplayInteractionInstance* CreateGameplayInteractionInstance(UObject* WorldContextObject,UPARAM(ref)
-	                                                                       FGameplayInteractionDescription&
-	                                                                       Description);
+	                                                                       FGameplayInteractionDescription& Description,
+	                                                                       UWidgetComponent* WidgetComponent = nullptr);
 };

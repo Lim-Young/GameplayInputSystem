@@ -4,7 +4,8 @@
 #include "GameplayInteractionSystemLibrary.h"
 
 UGameplayInteractionInstance* UGameplayInteractionSystemLibrary::CreateGameplayInteractionInstance(
-	UObject* WorldContextObject, FGameplayInteractionDescription& Description)
+	UObject* WorldContextObject, FGameplayInteractionDescription& Description,
+	UWidgetComponent* WidgetComponent /*= nullptr*/)
 {
 	if (!IsValid(WorldContextObject))
 	{
@@ -16,7 +17,7 @@ UGameplayInteractionInstance* UGameplayInteractionSystemLibrary::CreateGameplayI
 	if (UGameplayInteractionInstance* NewInstance = NewObject<UGameplayInteractionInstance>(WorldContextObject))
 	{
 		NewInstance->AddToRoot();
-		NewInstance->InitializeInteractionInstance(Description);
+		NewInstance->InitializeInteractionInstance(Description, WidgetComponent);
 		return NewInstance;
 	}
 

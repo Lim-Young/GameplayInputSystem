@@ -6,6 +6,7 @@
 #include "GameplayInteractionProcessor.h"
 #include "GameplayInteractionWidgetInterface.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
 
 bool FGameplayInteractionWidgetConfig::Valid() const
 {
@@ -23,7 +24,8 @@ void UGameplayInteractionInstance::BeginDestroy()
 }
 
 void UGameplayInteractionInstance::InitializeInteractionInstance(
-	const FGameplayInteractionDescription& InteractionDescription)
+	const FGameplayInteractionDescription& InteractionDescription,
+	UWidgetComponent* InteractionWidgetComponent /*= nullptr*/)
 {
 	if (!InteractionDescription.Valid())
 	{
@@ -46,6 +48,19 @@ void UGameplayInteractionInstance::InitializeInteractionInstance(
 		return;
 	}
 
+	if (IsValid(InteractionWidgetComponent))
+	{
+		InteractionWidgetComponent->SetWidgetClass(InteractionDescription.WidgetConfig.InteractionWidgetClass);
+		InteractionWidgetComponent->SetDrawSize(InteractionDescription.WidgetConfig.WidgetDesiredSize);
+		InteractionWidgetComponent->UpdateWidget();
+
+		InteractionWidget = InteractionWidgetComponent->GetWidget();
+
+		IGameplayInteractionWidgetInterface::Execute_OnInitializeInteraction(InteractionWidget);
+		return;
+	}
+
+	// Create the interaction widget and add it to the viewport
 	InteractionWidget = CreateWidget(GetWorld(), InteractionDescription.WidgetConfig.InteractionWidgetClass);
 	if (!InteractionWidget)
 	{
