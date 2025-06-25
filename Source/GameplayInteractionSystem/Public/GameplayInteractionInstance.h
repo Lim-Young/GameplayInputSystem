@@ -46,6 +46,15 @@ struct FGameplayInteractionDescription
 	bool Valid() const;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionSuccess);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionFailed);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionComplete);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractionInputEvent, const FGameplayTag&, InputTag,
+                                             const EGameplayInputType, InputType);
+
 /**
  * 
  */
@@ -56,15 +65,7 @@ class GAMEPLAYINTERACTIONSYSTEM_API UGameplayInteractionInstance : public UObjec
 
 	friend class UGameplayInteractionProcessor;
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionSuccess);
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionFailed);
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionComplete);
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractionInputEvent, const FGameplayTag&, InputTag,
-	                                             const EGameplayInputType, InputType);
-
+public:
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Interaction")
 	FOnInteractionComplete OnInteractionSuccess;
 

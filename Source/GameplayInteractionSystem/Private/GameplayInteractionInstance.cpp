@@ -73,6 +73,7 @@ void UGameplayInteractionInstance::DestroyInteractionInstance()
 void UGameplayInteractionInstance::Cleanup()
 {
 	// Clean up the interaction instance
+	OnInteractionInputEvent.Clear();
 	OnInteractionSuccess.Clear();
 	OnInteractionFailed.Clear();
 	OnInteractionComplete.Clear();
