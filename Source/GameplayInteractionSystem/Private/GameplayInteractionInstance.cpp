@@ -63,6 +63,13 @@ void UGameplayInteractionInstance::InitializeInteractionInstance(
 	IGameplayInteractionWidgetInterface::Execute_OnInitializeInteraction(InteractionWidget);
 }
 
+void UGameplayInteractionInstance::DestroyInteractionInstance()
+{
+	Cleanup();
+
+	MarkAsGarbage();
+}
+
 void UGameplayInteractionInstance::Cleanup()
 {
 	// Clean up the interaction instance
@@ -127,7 +134,5 @@ void UGameplayInteractionInstance::CompleteInteraction(const bool bSuccess)
 		IGameplayInteractionWidgetInterface::Execute_OnInteractionComplete(InteractionWidget);
 	}
 
-	Cleanup();
-
-	MarkAsGarbage();
+	DestroyInteractionInstance();
 }

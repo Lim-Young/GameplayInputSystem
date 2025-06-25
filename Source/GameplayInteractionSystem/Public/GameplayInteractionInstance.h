@@ -88,6 +88,8 @@ public:
 	virtual void BeginDestroy() override;
 	void InitializeInteractionInstance(const FGameplayInteractionDescription& InteractionDescription);
 
+	void DestroyInteractionInstance();
+
 private:
 	void Cleanup();
 	void OnWorldCleanup(UWorld* World, bool bArg, bool bCond);
