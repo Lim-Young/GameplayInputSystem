@@ -46,6 +46,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Interaction")
 	FGameplayInteractionDescription InteractionDescription;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Interaction")
+	bool bCanActive = true;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Interaction|Widget")
 	FName InteractionWidgetName;
 

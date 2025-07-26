@@ -139,7 +139,17 @@ bool UGameplayInteractableComponent::CheckInteractorTags(const FGameplayTagConta
 
 bool UGameplayInteractableComponent::ActiveInteraction(UGameplayInteractorComponent* InteractorComponent)
 {
+	if (!bCanActive)
+	{
+		return false;
+	}
+
 	if (!IsValid(InteractorComponent))
+	{
+		return false;
+	}
+
+	if (!InteractionDescription.Valid())
 	{
 		return false;
 	}

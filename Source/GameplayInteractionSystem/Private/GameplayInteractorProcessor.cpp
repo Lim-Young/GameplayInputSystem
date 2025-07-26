@@ -35,8 +35,10 @@ void UGameplayInteractorProcessor::ActiveInteractableComponent(
 		return;
 	}
 
-	InteractableComponent->ActiveInteraction(OwnerInteractorComponent);
-	OwnerInteractorComponent->AddInteractableComponent(InteractableComponent);
+	if (InteractableComponent->ActiveInteraction(OwnerInteractorComponent))
+	{
+		OwnerInteractorComponent->AddInteractableComponent(InteractableComponent);
+	}
 }
 
 void UGameplayInteractorProcessor::DeactivateInteractableComponent(
@@ -47,6 +49,8 @@ void UGameplayInteractorProcessor::DeactivateInteractableComponent(
 		return;
 	}
 
-	InteractableComponent->DeactivateInteraction();
-	OwnerInteractorComponent->RemoveInteractableComponent(InteractableComponent);
+	if (InteractableComponent->DeactivateInteraction())
+	{
+		OwnerInteractorComponent->RemoveInteractableComponent(InteractableComponent);
+	}
 }
