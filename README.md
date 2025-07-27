@@ -55,6 +55,7 @@ You can configure different interaction processors to suit various interaction n
 In the interaction configuration, you can specify an interaction widget (InteractionWidget), which is a UI component used to display relevant information to the player during the interaction. Any UserWidget that implements the `IGameplayInteractionWidgetInterface` interface can be used as an interaction widget.
 
 The interface provides the following callbacks:
+
 ![GameplayInteractionWidgetInterface](Doc/Img/IMG_GameplayInteractionWidgetInterface.png)
 
 The callbacks in the "Callbacks" category are self-explanatory and are mainly used to update the UI state during the interaction. You can play UI animations, update text, etc.
