@@ -23,6 +23,7 @@ This system focuses on managing and dispatching input events at the game logic l
 ## Usage Instructions
 ### 1. GameplayInputSystem
 If you only need the global input listening functionality, it's very simple and can be summarized in one screenshot:
+
 ![GameplayInputSystemOverview](Doc/Img/IMG_GameplayInputSystemOverview.png)
 
 Specifically, it involves three steps:
@@ -35,6 +36,7 @@ Typically, you should call the `InjectGameplayInput` function when the correspon
 ### 2. GameplayInteractionSystem
 #### 2.1 Interaction Instances
 If you need to use the interaction system, note that its main difference from other interaction systems is that each interaction is an independent instance. To create an interaction, you don't need to rely on any components; you only need to create a `GameplayInteractionInstance`. Here's an overview of the system:
+
 ![GameplayInteractionSystemOverview](Doc/Img/IMG_GameplayInteractionSystemOverview.png)
 
 An interaction does not necessarily correspond to a single input event. In this system, an interaction can be a 3-second long press, a precise click, or even a sequence of button presses or combo inputs, depending on your configuration. Regardless, every interaction will result in either success or failure. Successful interactions trigger the `OnInteractionSuccess` event, while failed interactions trigger the `OnInteractionFailed` event. When the interaction is completed, the `OnInteractionCompleted` event is triggered regardless of the outcome. You can bind to these events after creating an interaction instance to handle the results.
@@ -43,10 +45,13 @@ Additionally, during the activation of an interaction instance, input events cap
 
 #### 2.2 Interaction Configuration
 Interaction configuration refers to specifying the parameters and behavior of an interaction when creating a `GameplayInteractionInstance`. The main configuration item is the InteractionProcessor, which defines the interaction's processing logic and response to input events. You can implement custom interaction processing logic by inheriting from the `UGameplayInteractionProcessor` class.
+
 ![GameplayInteractionDescription](Doc/Img/IMG_GameplayInteractionDescription.png)
 
 The GameplayInteractionProcessor is stored as an instantiated reference, and you can configure its default values in the editor. For example, to configure a button-mashing interaction, you can set it up as follows:
+
 ![GameplayInteractionProcessor_Mash](Doc/Img/IMG_GameplayInteractionProcessor_Mash.png)
+
 This configuration specifies that the interaction requires receiving 5 `GameplayInput` tag input events within 3 seconds, with no more than 1 second between each event.
 
 You can configure different interaction processors to suit various interaction needs, or extend your own processors to meet specific game requirements. More default interaction processors will be provided in the future.
@@ -63,6 +68,7 @@ The callbacks in the "Callbacks" category are self-explanatory and are mainly us
 The callbacks in the "Lifecycle" category are used to handle different stages of the interaction, such as showing the UI at the start of the interaction and hiding it at the end.
 
 With the widget class, you can include it as part of the interaction configuration when creating an interaction instance. Additionally, you can configure more options, as shown below:
+
 ![GameplayInteractionWidget](Doc/Img/IMG_GameplayInteractionWidget.png)
 
 You can specify the widget's anchor position, alignment, and required size, which will be directly applied to the widget.
@@ -71,6 +77,7 @@ By default, if no target WidgetComponent is specified when creating an interacti
 
 #### 2.4 Interaction Components
 If you need to use the interaction system on an Actor, you can use the following components to achieve this easily:
+
 ![GameplayInteractionSystemComponents](Doc/Img/IMG_GameplayInteractionSystemComponents.png)
 
 - **GameplayInteractableComponent**: Add this component to any Actor to define it as an interactable Actor.
@@ -78,6 +85,7 @@ If you need to use the interaction system on an Actor, you can use the following
 
 ##### 2.4.1 GameplayInteractableComponent
 After adding this component to an Actor, you can configure the Actor's interaction properties in the editor, as shown below:
+
 ![GameplayInteractionConfig](Doc/Img/IMG_GameplayInteractionConfig.png)
 
 - **Required Interactor Tags**: Specifies the tags required for an interactor to interact with this Actor.
@@ -92,6 +100,7 @@ After adding this component to an Actor, you can configure the Actor's interacti
 With interactable objects in place, you can now create an interactor. Add this component to any Actor to define it as an interactor. An interactor can be a player character, NPC, etc. It is responsible for triggering interaction events on the GameplayInteractableComponent.
 
 After adding this component to an Actor, you can configure the Actor's interaction properties in the editor, as shown below:
+
 ![GameplayInteractorComponentConfig](Doc/Img/IMG_GameplayInteractorComponentConfig.png)
 
 - **Processor**: Interaction processors differ from the previously mentioned interaction processors. Interaction processors define the logic for handling interaction events, while interactor processors handle the lifecycle of interactable objects. For example, you can define an Overlap interactor processor that automatically triggers interaction events when the interactor overlaps with an interactable object and cancels the interaction when the overlap ends. Alternatively, you can define a Cone of Vision interactor processor that triggers interaction events when the interactor enters the cone of vision of an interactable object and cancels the interaction when it leaves. You can attach multiple interactor processors simultaneously to achieve more complex interaction logic. Processors are independent of each other and only inform the interactor which interactable objects need activation or cancellation.
@@ -101,6 +110,7 @@ To improve performance, you can choose whether to use the Tick function to updat
 
 ##### 2.4.3 Event Callbacks
 Both components provide event callbacks, allowing you to bind these events on the Actor to handle interaction logic.
+
 ![GameplayInteractionSystemComponentEvent](Doc/Img/IMG_GameplayInteractionSystemComponentEvent.png)
 
 ## TODO
