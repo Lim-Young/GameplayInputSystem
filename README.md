@@ -1,4 +1,4 @@
-![GitHub License](https://img.shields.io/github/license/Lim-Young/GameplayInputSystem)
+![GitHub License](https://badgen.net/github/license/Lim-Young/GameplayInputSystem)
 ![Unreal Engine](https://img.shields.io/badge/Unreal-5.6-dea309?style=flat&logo=unrealengine)
 
 # GameplayInputSystem
