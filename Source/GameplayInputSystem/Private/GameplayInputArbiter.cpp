@@ -45,41 +45,120 @@ void UGameplayInputArbiter::Cancel()
 	GameplayInputCommandQueue.Empty();
 }
 
+bool UGameplayInputArbiter::CheckIfTheCommandHasExpired(const float CurrentTime,
+                                                        const TObjectPtr<UGameplayInputCommand> CurrentCommand)
+{
+	// Command expired
+	if (CurrentCommand->Lifetime != 0.0f && (CurrentTime - CurrentCommand->Timestamp) > CurrentCommand->
+		Lifetime)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool UGameplayInputArbiter::Finish(UGameplayInputCommand*& ResultCommand)
 {
 	const float CurrentTime = GetWorld()->GetTimeSeconds();
 
-	TObjectPtr<UGameplayInputCommand> HighestPriorityCommand = nullptr;
-	uint8 HighestPriority = 0;
-
-	for (const TObjectPtr<UGameplayInputCommand> CurrentCommand : GameplayInputCommandQueue)
+	switch (GameplayInputDocker->DeliberationMode)
 	{
-		if (!CurrentCommand)
+	case EArbiterDeliberationMode::FirstSurvivalCommand:
 		{
-			continue;
-		}
+			for (const TObjectPtr<UGameplayInputCommand> CurrentCommand : GameplayInputCommandQueue)
+			{
+				if (!CurrentCommand)
+				{
+					continue;
+				}
 
-		// Command expired
-		if (CurrentCommand->Lifetime != 0.0f && (CurrentTime - CurrentCommand->Timestamp) > CurrentCommand->Lifetime)
-		{
-			continue;
-		}
+				// Command expired
+				if (CheckIfTheCommandHasExpired(CurrentTime, CurrentCommand))
+				{
+					continue;
+				}
 
-		// Find Priority Command
-		if (CurrentCommand->Priority >= HighestPriority)
+				ResultCommand = CurrentCommand;
+				return true;
+			}
+			return false;
+		}
+	case EArbiterDeliberationMode::LastSurvivalCommand:
 		{
-			HighestPriority = CurrentCommand->Priority;
-			HighestPriorityCommand = CurrentCommand;
+			for (int32 Index = GameplayInputCommandQueue.Num() - 1; Index >= 0; --Index)
+			{
+				const TObjectPtr<UGameplayInputCommand> CurrentCommand = GameplayInputCommandQueue[Index];
+				if (!CurrentCommand)
+				{
+					continue;
+				}
+
+				// Command expired
+				if (CheckIfTheCommandHasExpired(CurrentTime, CurrentCommand))
+				{
+					continue;
+				}
+
+				ResultCommand = CurrentCommand;
+				return true;
+			}
+
+			return false;
+		}
+	case EArbiterDeliberationMode::FirstCommand:
+		{
+			if (GameplayInputCommandQueue.Num() > 0)
+			{
+				ResultCommand = GameplayInputCommandQueue[0];
+				return true;
+			}
+
+			return false;
+		}
+	case EArbiterDeliberationMode::LastCommand:
+		{
+			if (GameplayInputCommandQueue.Num() > 0)
+			{
+				ResultCommand = GameplayInputCommandQueue.Last();
+				return true;
+			}
+
+			return false;
+		}
+		[[likely]]default:
+		{
+			TObjectPtr<UGameplayInputCommand> HighestPriorityCommand = nullptr;
+			uint8 HighestPriority = 0;
+
+			for (const TObjectPtr<UGameplayInputCommand> CurrentCommand : GameplayInputCommandQueue)
+			{
+				if (!CurrentCommand)
+				{
+					continue;
+				}
+
+				if (CheckIfTheCommandHasExpired(CurrentTime, CurrentCommand))
+				{
+					continue;
+				}
+
+				// Find Priority Command
+				if (CurrentCommand->Priority >= HighestPriority)
+				{
+					HighestPriority = CurrentCommand->Priority;
+					HighestPriorityCommand = CurrentCommand;
+				}
+			}
+
+			if (HighestPriorityCommand)
+			{
+				ResultCommand = HighestPriorityCommand;
+				return true;
+			}
+
+			return false;
 		}
 	}
-
-	if (HighestPriorityCommand)
-	{
-		ResultCommand = HighestPriorityCommand;
-		return true;
-	}
-
-	return false;
 }
 
 bool UGameplayInputArbiter::ReceiveGameplayInput(const FGameplayTag InputTag, EGameplayInputType InputType)

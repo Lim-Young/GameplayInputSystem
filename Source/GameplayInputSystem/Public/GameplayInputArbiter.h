@@ -27,10 +27,10 @@ class UGameplayInputCommand : public UObject
 
 public:
 	void Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType, uint8 InPriority,
-					float InLifetime, float InTimestamp);
+	                float InLifetime, float InTimestamp);
 
 	void Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
-					const FGameplayInputCommandConfig& InConfig);
+	                const FGameplayInputCommandConfig& InConfig);
 
 public:
 	FGameplayTag InputTag;
@@ -39,6 +39,16 @@ public:
 	float Lifetime = 0.0f;
 
 	float Timestamp = 0.0f;
+};
+
+UENUM()
+enum class EArbiterDeliberationMode : uint8
+{
+	PriorityBased UMETA(DisplayName = "Priority Based (基于优先级)"),
+	FirstSurvivalCommand UMETA(DisplayName = "First Survival Command (首个存活命令)"),
+	LastSurvivalCommand UMETA(DisplayName = "Last Survival Command (末尾存活命令)"),
+	FirstCommand UMETA(DisplayName = "First Command (首个命令)"),
+	LastCommand UMETA(DisplayName = "Last Command (末尾命令)"),
 };
 
 /**
@@ -52,6 +62,9 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System", meta = (Categories = GameplayInput))
 	TMap<FGameplayTag, FGameplayInputCommandConfig> InputCommands;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System")
+	EArbiterDeliberationMode DeliberationMode = EArbiterDeliberationMode::PriorityBased;
 
 	bool HasCommandForTag(const FGameplayTag& InputTag) const;
 
@@ -72,6 +85,9 @@ protected:
 
 	UPROPERTY()
 	TArray<TObjectPtr<UGameplayInputCommand>> GameplayInputCommandQueue;
+
+private:
+	bool CheckIfTheCommandHasExpired(float CurrentTime, TObjectPtr<UGameplayInputCommand> CurrentCommand);
 
 public:
 	void Initialize(UGameplayInputDocket* InGameplayInputDocker);
