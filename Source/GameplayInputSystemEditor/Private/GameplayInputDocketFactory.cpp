@@ -3,7 +3,7 @@
 
 #include "GameplayInputDocketFactory.h"
 
-#include "GameplayInputSubsystem.h"
+#include "GameplayInputDocket.h"
 
 UGameplayInputDocketFactory::UGameplayInputDocketFactory()
 {

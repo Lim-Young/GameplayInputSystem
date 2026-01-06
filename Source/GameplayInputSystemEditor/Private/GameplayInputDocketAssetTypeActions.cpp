@@ -3,7 +3,7 @@
 
 #include "GameplayInputDocketAssetTypeActions.h"
 
-#include "GameplayInputSubsystem.h"
+#include "GameplayInputDocket.h"
 
 UClass* FGameplayInputDocketAssetTypeActions::GetSupportedClass() const
 {
