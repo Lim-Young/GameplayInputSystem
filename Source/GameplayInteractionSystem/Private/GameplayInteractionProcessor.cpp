@@ -29,7 +29,7 @@ void UGameplayInteractionProcessor::Initialize(UGameplayInteractionInstance* Int
 	OwnerWorld = GetWorld();
 	ensureMsgf(OwnerWorld, TEXT("UGameplayInteractionProcessor::Initialize - OwnerWorld is invalid"));
 
-	GameplayInputSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UGameplayInputSubsystem>();
+	GameplayInputSubsystem = GetWorld()->GetSubsystem<UGameplayInputSubsystem>();
 	OwnerInteractionInstance = InteractionInstance;
 
 	GameplayInputSubsystem->OnGameplayInputEvent.AddDynamic(

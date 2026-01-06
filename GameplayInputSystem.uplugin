@@ -23,6 +23,11 @@
 			"Name": "GameplayInteractionSystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "GameplayInputSystemEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
