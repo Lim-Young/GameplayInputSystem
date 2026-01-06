@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputDocket.h"
+#include "GameplayInputArbiter.h"
 #include "GameplayInputStructsEnums.h"
 #include "GameplayTagContainer.h"
 #include "NativeGameplayTags.h"
@@ -11,28 +11,6 @@
 #include "GameplayInputSubsystem.generated.h"
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayInput)
-
-UCLASS()
-class UGameplayInputArbiter : public UObject
-{
-	GENERATED_BODY()
-
-protected:
-	UPROPERTY()
-	UGameplayInputDocket* GameplayInputDocker;
-
-	UPROPERTY()
-	TArray<TObjectPtr<UGameplayInputCommand>> GameplayInputCommandQueue;
-
-public:
-	void Initialize(UGameplayInputDocket* InGameplayInputDocker);
-
-	void Start();
-	void Cancel();
-	bool Finish(UGameplayInputCommand*& ResultCommand);
-
-	bool ReceiveGameplayInput(FGameplayTag InputTag, EGameplayInputType InputType);
-};
 
 /**
  * 
