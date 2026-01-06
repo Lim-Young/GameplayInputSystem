@@ -3,7 +3,7 @@
 
 #include "GameplayInputDocketFactory.h"
 
-#include "GameplayInputDocket.h"
+#include "GameplayInputArbiter.h"
 
 UGameplayInputDocketFactory::UGameplayInputDocketFactory()
 {

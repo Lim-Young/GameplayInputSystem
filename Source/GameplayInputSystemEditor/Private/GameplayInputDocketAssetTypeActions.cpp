@@ -3,7 +3,7 @@
 
 #include "GameplayInputDocketAssetTypeActions.h"
 
-#include "GameplayInputDocket.h"
+#include "GameplayInputArbiter.h"
 
 UClass* FGameplayInputDocketAssetTypeActions::GetSupportedClass() const
 {
