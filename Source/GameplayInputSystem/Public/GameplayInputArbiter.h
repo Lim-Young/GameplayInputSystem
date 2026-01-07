@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputStructsEnums.h"
+#include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "UObject/Object.h"
 #include "GameplayInputArbiter.generated.h"

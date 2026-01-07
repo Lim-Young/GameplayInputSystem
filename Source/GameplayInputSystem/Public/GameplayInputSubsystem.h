@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayInputArbiter.h"
-#include "GameplayInputStructsEnums.h"
+#include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "NativeGameplayTags.h"
 #include "Subsystems/GameInstanceSubsystem.h"
