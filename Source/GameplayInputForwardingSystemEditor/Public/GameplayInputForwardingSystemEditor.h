@@ -1,26 +1,22 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "AssetTypeActions_Base.h"
 #include "Modules/ModuleManager.h"
-
-#include "GameplayInputSystemEditor.generated.h"
+#include "AssetTypeActions_Base.h"
+#include "GameplayInputForwardingSystemEditor.generated.h"
 
 // Factory
 
-/**
- * 
- */
 UCLASS()
-class UGameplayInputDocketFactory : public UFactory
+class UGameplayInputForwardingMappingFactory : public UFactory
 {
 	GENERATED_BODY()
-	
+
 public:
-	UGameplayInputDocketFactory();
+	UGameplayInputForwardingMappingFactory();
 
 	virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
-		UObject* Context, FFeedbackContext* Warn) override;
+	                                  UObject* Context, FFeedbackContext* Warn) override;
 };
 
 // Asset Type Actions
@@ -28,7 +24,7 @@ public:
 /**
  * 
  */
-class FGameplayInputDocketAssetTypeActions : public FAssetTypeActions_Base
+class FGameplayInputForwardingMappingAssetTypeActions : public FAssetTypeActions_Base
 {
 public:
 	virtual UClass* GetSupportedClass() const override;
@@ -37,12 +33,12 @@ public:
 	virtual uint32 GetCategories() override;
 };
 
-class FGameplayInputSystemEditorModule : public IModuleInterface
+class FGameplayInputForwardingSystemEditorModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
 private:
-	TSharedPtr<FGameplayInputDocketAssetTypeActions> GameplayInputScenarioAssetTypeActions;
+	TSharedPtr<FGameplayInputForwardingMappingAssetTypeActions> GameplayInputForwardingMappingAssetTypeActions;
 };

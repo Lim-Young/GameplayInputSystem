@@ -33,7 +33,7 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputTag, 
 		}
 	}
 
-	OnGameplayInputEvent.Broadcast(InputTag, InputType);
+	BroadcastGameplayInputEvent(InputTag, InputType);
 }
 
 void UGameplayInputSubsystem::CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker)
@@ -58,9 +58,15 @@ void UGameplayInputSubsystem::FinishAndUnregisterGameplayInputArbiter(UGameplayI
 		UGameplayInputCommand* ResultCommand;
 		if (GameplayInputArbiters[InGameplayInputDocker]->Finish(ResultCommand))
 		{
-			OnGameplayInputEvent.Broadcast(ResultCommand->InputTag, ResultCommand->InputType);
+			BroadcastGameplayInputEvent(ResultCommand->InputTag, ResultCommand->InputType);
 		}
 
 		GameplayInputArbiters.Remove(InGameplayInputDocker);
 	}
+}
+
+void UGameplayInputSubsystem::BroadcastGameplayInputEvent(const FGameplayTag& InputTag,
+                                                          const EGameplayInputType InputType) const
+{
+	OnGameplayInputEvent.Broadcast(InputTag, InputType);
 }

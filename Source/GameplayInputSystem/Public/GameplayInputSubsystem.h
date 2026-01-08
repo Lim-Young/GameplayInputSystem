@@ -46,4 +46,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
 	void FinishAndUnregisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker);
+
+private:
+	void BroadcastGameplayInputEvent(const FGameplayTag& InputTag, EGameplayInputType InputType) const;
 };

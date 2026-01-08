@@ -28,6 +28,16 @@
 			"Name": "GameplayInputSystemEditor",
 			"Type": "Editor",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "GameplayInputForwardingSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "GameplayInputForwardingSystemEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
