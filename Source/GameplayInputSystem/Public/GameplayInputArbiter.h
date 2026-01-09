@@ -29,14 +29,14 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System", meta = (Categories = GameplayInput))
-	TMap<FGameplayTag, FGameplayInputCommandConfig> InputCommands;
+	TMap<FGameplayInputCommandType, FGameplayInputCommandConfig> InputCommands;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System")
 	EArbiterDeliberationMode DeliberationMode = EArbiterDeliberationMode::PriorityBased;
 
-	bool HasCommandForTag(const FGameplayTag& InputTag) const;
+	bool HasCommand(const FGameplayTag& InputTag, EGameplayInputType InputType) const;
 
-	FGameplayInputCommandConfig& GetCommandConfigForTag(const FGameplayTag& InputTag);
+	FGameplayInputCommandConfig& GetCommandConfig(const FGameplayTag& InputTag, EGameplayInputType InputType);
 };
 
 /**

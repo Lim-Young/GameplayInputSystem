@@ -7,7 +7,7 @@ bool UGameplayInputForwardingMapping::TryGetInputForwardingTag(const FGameplayTa
                                                                const EGameplayInputType InInputType,
                                                                FGameplayTag& OutForwardingTag) const
 {
-	FGameplayInputForwardingEntry Entry = FGameplayInputForwardingEntry(InInputTag, InInputType);
+	const FGameplayInputCommandType Entry = FGameplayInputCommandType(InInputTag, InInputType);
 	if (ForwardingMap.Contains(Entry))
 	{
 		OutForwardingTag = ForwardingMap[Entry];

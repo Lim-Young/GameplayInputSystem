@@ -1,7 +1,24 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Lim Young.
 
 
 #include "GameplayInputCommand.h"
+
+FGameplayInputCommandType::FGameplayInputCommandType()
+{
+	InputTag = FGameplayTag::EmptyTag;
+	InputType = EGameplayInputType::Action;
+}
+
+FGameplayInputCommandType::FGameplayInputCommandType(const FGameplayTag InputTag, const EGameplayInputType InputType)
+{
+	this->InputTag = InputTag;
+	this->InputType = InputType;
+}
+
+bool FGameplayInputCommandType::operator==(const FGameplayInputCommandType& Other) const
+{
+	return InputTag == Other.InputTag && InputType == Other.InputType;
+}
 
 void UGameplayInputCommand::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
                                        uint8 InPriority, float InLifetime, float InTimestamp)

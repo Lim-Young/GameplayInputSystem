@@ -4,14 +4,15 @@
 #include "GameplayInputArbiter.h"
 
 
-bool UGameplayInputDocket::HasCommandForTag(const FGameplayTag& InputTag) const
+bool UGameplayInputDocket::HasCommand(const FGameplayTag& InputTag, EGameplayInputType InputType) const
 {
-	return InputCommands.Contains(InputTag);
+	return InputCommands.Contains(FGameplayInputCommandType(InputTag, InputType));
 }
 
-FGameplayInputCommandConfig& UGameplayInputDocket::GetCommandConfigForTag(const FGameplayTag& InputTag)
+FGameplayInputCommandConfig& UGameplayInputDocket::GetCommandConfig(const FGameplayTag& InputTag,
+                                                                    EGameplayInputType InputType)
 {
-	return InputCommands.FindChecked(InputTag);
+	return InputCommands.FindChecked(FGameplayInputCommandType(InputTag, InputType));
 }
 
 void UGameplayInputArbiter::Initialize(UGameplayInputDocket* InGameplayInputDocker)
@@ -147,9 +148,9 @@ bool UGameplayInputArbiter::Finish(UGameplayInputCommand*& ResultCommand)
 
 bool UGameplayInputArbiter::ReceiveGameplayInput(const FGameplayTag InputTag, EGameplayInputType InputType)
 {
-	if (GameplayInputDocker->HasCommandForTag(InputTag))
+	if (GameplayInputDocker->HasCommand(InputTag, InputType))
 	{
-		const FGameplayInputCommandConfig InputCommandConfig = GameplayInputDocker->GetCommandConfigForTag(InputTag);
+		const FGameplayInputCommandConfig InputCommandConfig = GameplayInputDocker->GetCommandConfig(InputTag, InputType);
 
 		UGameplayInputCommand* NewInputCommand = NewObject<UGameplayInputCommand>(this);
 		NewInputCommand->Initialize(InputTag, InputType, InputCommandConfig);

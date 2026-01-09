@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Lim Young.
 
 #pragma once
 
@@ -9,7 +9,31 @@
 #include "GameplayInputCommand.generated.h"
 
 USTRUCT(BlueprintType)
-struct FGameplayInputCommandConfig
+struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandType
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, meta=(Categories = GameplayInput))
+	FGameplayTag InputTag;
+
+	UPROPERTY(EditAnywhere)
+	EGameplayInputType InputType;
+
+	FGameplayInputCommandType();
+
+	FGameplayInputCommandType(const FGameplayTag InputTag, const EGameplayInputType InputType);
+
+	// GetTypeHash
+	friend uint32 GetTypeHash(const FGameplayInputCommandType& Entry)
+	{
+		return HashCombine(GetTypeHash(Entry.InputTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
+	}
+
+	bool operator==(const FGameplayInputCommandType& Other) const;
+};
+
+USTRUCT(BlueprintType)
+struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandConfig
 {
 	GENERATED_BODY()
 

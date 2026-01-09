@@ -3,45 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayInputCommand.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "UObject/Object.h"
 #include "GameplayInputForwardingMapping.generated.h"
-
-USTRUCT(BlueprintType)
-struct FGameplayInputForwardingEntry
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, meta=(Categories = GameplayInput))
-	FGameplayTag InputTag;
-
-	UPROPERTY(EditAnywhere)
-	EGameplayInputType InputType;
-
-	FGameplayInputForwardingEntry()
-	{
-		InputTag = FGameplayTag::EmptyTag;
-		InputType = EGameplayInputType::Action;
-	}
-
-	FGameplayInputForwardingEntry(const FGameplayTag InputTag, const EGameplayInputType InputType)
-	{
-		this->InputTag = InputTag;
-		this->InputType = InputType;
-	}
-
-	// GetTypeHash
-	friend uint32 GetTypeHash(const FGameplayInputForwardingEntry& Entry)
-	{
-		return HashCombine(GetTypeHash(Entry.InputTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
-	}
-	
-	bool operator==(const FGameplayInputForwardingEntry& Other) const
-	{
-		return InputTag == Other.InputTag && InputType == Other.InputType;
-	}
-};
 
 /**
  * 
@@ -53,7 +19,7 @@ class GAMEPLAYINPUTFORWARDINGSYSTEM_API UGameplayInputForwardingMapping : public
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (TitleProperty = "{MyString}[{MyInt}]"))
-	TMap<FGameplayInputForwardingEntry, FGameplayTag> ForwardingMap;
+	TMap<FGameplayInputCommandType, FGameplayTag> ForwardingMap;
 
 	UPROPERTY(EditAnywhere)
 	uint8 Priority = 0;
