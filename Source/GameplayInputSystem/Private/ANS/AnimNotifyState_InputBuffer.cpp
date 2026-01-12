@@ -10,6 +10,11 @@ void UAnimNotifyState_InputBuffer::NotifyBegin(USkeletalMeshComponent* MeshComp,
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
+	if (!IsValid(GameplayInputDocket))
+	{
+		return;
+	}
+
 	if (!IsValid(MeshComp) || !MeshComp->GetWorld() || MeshComp->GetWorld()->GetNetMode() == NM_DedicatedServer)
 	{
 		return;
@@ -25,6 +30,11 @@ void UAnimNotifyState_InputBuffer::NotifyEnd(USkeletalMeshComponent* MeshComp, U
                                              const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
+
+	if (!IsValid(GameplayInputDocket))
+	{
+		return;
+	}
 
 	if (!IsValid(MeshComp) || !MeshComp->GetWorld() || MeshComp->GetWorld()->GetNetMode() == NM_DedicatedServer)
 	{
