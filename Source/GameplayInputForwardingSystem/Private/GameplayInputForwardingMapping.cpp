@@ -56,24 +56,25 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 	}
 
 	// Check ForwardingConfigs InputTag uniqueness
-	TSet<FGameplayTag> UniqueTags;
-	// if new tag already exists, clear it and show warning
-	for (FGameplayInputForwardingConfigContainer& ConfigContainer : ForwardingConfigs)
+	if (PropertyChangedEvent.Property &&
+		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
+			FGameplayInputForwardingConfigContainer, InputTag))
 	{
-		if (!ConfigContainer.InputTag.IsValid())
+		int index = PropertyChangedEvent.GetArrayIndex(
+			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, ForwardingConfigs).ToString());
+		if (index >= 0)
 		{
-			continue;
-		}
-
-		if (UniqueTags.Contains(ConfigContainer.InputTag))
-		{
-			FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
-				                     "GameplayInputForwardingMapping: Duplicate InputTags are not allowed in ForwardingConfigs."));
-			ConfigContainer.InputTag = FGameplayTag();
-		}
-		else
-		{
-			UniqueTags.Add(ConfigContainer.InputTag);
+			FGameplayTag ChangedTag = ForwardingConfigs[index].InputTag;
+			for (int i = 0; i < ForwardingConfigs.Num(); i++)
+			{
+				if (i != index && ForwardingConfigs[i].InputTag == ChangedTag)
+				{
+					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+						                     "GameplayInputForwardingMapping: Duplicate InputTag is not allowed."));
+					ForwardingConfigs[index].InputTag = FGameplayTag();
+					break;
+				}
+			}
 		}
 	}
 
