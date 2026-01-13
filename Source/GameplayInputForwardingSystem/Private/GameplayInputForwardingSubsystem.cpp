@@ -40,7 +40,7 @@ void UGameplayInputForwardingSubsystem::HandleGameplayInputEvent(const FGameplay
 		if (!IsValid(CachedLocalPlayerPawn))
 		{
 			ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-			if (LocalPlayer && !LocalPlayer->PlayerController)
+			if (LocalPlayer && LocalPlayer->PlayerController)
 			{
 				CachedLocalPlayerPawn = LocalPlayer->PlayerController->GetPawn();
 			}
