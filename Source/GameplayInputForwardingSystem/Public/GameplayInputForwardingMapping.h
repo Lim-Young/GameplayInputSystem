@@ -9,6 +9,29 @@
 #include "UObject/Object.h"
 #include "GameplayInputForwardingMapping.generated.h"
 
+USTRUCT(BlueprintType)
+struct FGameplayInputForwardingConfig
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
+	TMap<EGameplayInputType, FGameplayTag> InputTypeToForwardingTagMap;
+
+	bool TryGetForwardingTag(const EGameplayInputType InInputType, FGameplayTag& OutForwardingTag) const;
+};
+
+USTRUCT(BlueprintType)
+struct FGameplayInputForwardingConfigContainer
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = GameplayInput))
+	FGameplayTag InputTag;
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
+	FGameplayInputForwardingConfig ForwardingConfig;
+};
+
 /**
  * 
  */
@@ -17,18 +40,25 @@ class GAMEPLAYINPUTFORWARDINGSYSTEM_API UGameplayInputForwardingMapping : public
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (TitleProperty = "{MyString}[{MyInt}]"))
-	TMap<FGameplayInputCommandType, FGameplayTag> ForwardingMap;
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding",
+		meta = (TitleProperty = "{InputTag}"))
+	TArray<FGameplayInputForwardingConfigContainer> ForwardingConfigs;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
 	uint8 Priority = 0;
+
+	UPROPERTY(VisibleAnywhere, Category = "Debug")
+	TMap<FGameplayTag, FGameplayInputForwardingConfig> ForwardingMap;
 
 public:
 	bool TryGetInputForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
 	                              FGameplayTag& OutForwardingTag) const;
 
 	uint8 GetPriority() const;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;
+#endif
 };
 
 struct FGameplayInputForwardingMappingPredicate

@@ -28,7 +28,8 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System", meta = (Categories = GameplayInput))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System",
+		meta = (Categories = GameplayInput, TitleProperty = "{InputTag}[{InputType}]"))
 	TMap<FGameplayInputCommandType, FGameplayInputCommandConfig> InputCommands;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System")
