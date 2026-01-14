@@ -6,13 +6,13 @@
 
 bool UGameplayInputDocket::HasCommand(const FGameplayTag& InputTag, EGameplayInputType InputType) const
 {
-	return InputCommands.Contains(FGameplayInputCommandDefinition(InputTag, InputType));
+	return InputCommands.Contains(FGameplayInputCommand(InputTag, InputType));
 }
 
 FGameplayInputCommandConfig& UGameplayInputDocket::GetCommandConfig(const FGameplayTag& InputTag,
                                                                     EGameplayInputType InputType)
 {
-	return InputCommands.FindChecked(FGameplayInputCommandDefinition(InputTag, InputType));
+	return InputCommands.FindChecked(FGameplayInputCommand(InputTag, InputType));
 }
 
 void UGameplayInputArbiter::Initialize(UGameplayInputDocket* InGameplayInputDocker)
@@ -31,7 +31,7 @@ void UGameplayInputArbiter::Cancel()
 }
 
 bool UGameplayInputArbiter::CheckIfTheCommandHasExpired(const float CurrentTime,
-                                                        const TObjectPtr<UGameplayInputCommand> CurrentCommand)
+                                                        const TObjectPtr<UGameplayInputCommandInstance> CurrentCommand)
 {
 	// Command expired
 	if (CurrentCommand->Lifetime != 0.0f && (CurrentTime - CurrentCommand->Timestamp) > CurrentCommand->
@@ -42,7 +42,7 @@ bool UGameplayInputArbiter::CheckIfTheCommandHasExpired(const float CurrentTime,
 	return false;
 }
 
-bool UGameplayInputArbiter::Finish(UGameplayInputCommand*& ResultCommand)
+bool UGameplayInputArbiter::Finish(UGameplayInputCommandInstance*& ResultCommand)
 {
 	const float CurrentTime = GetWorld()->GetTimeSeconds();
 
@@ -50,7 +50,7 @@ bool UGameplayInputArbiter::Finish(UGameplayInputCommand*& ResultCommand)
 	{
 	case EArbiterDeliberationMode::FirstSurvivalCommand:
 		{
-			for (const TObjectPtr<UGameplayInputCommand> CurrentCommand : GameplayInputCommandQueue)
+			for (const TObjectPtr<UGameplayInputCommandInstance> CurrentCommand : GameplayInputCommandQueue)
 			{
 				if (!CurrentCommand)
 				{
@@ -72,7 +72,7 @@ bool UGameplayInputArbiter::Finish(UGameplayInputCommand*& ResultCommand)
 		{
 			for (int32 Index = GameplayInputCommandQueue.Num() - 1; Index >= 0; --Index)
 			{
-				const TObjectPtr<UGameplayInputCommand> CurrentCommand = GameplayInputCommandQueue[Index];
+				const TObjectPtr<UGameplayInputCommandInstance> CurrentCommand = GameplayInputCommandQueue[Index];
 				if (!CurrentCommand)
 				{
 					continue;
@@ -112,10 +112,10 @@ bool UGameplayInputArbiter::Finish(UGameplayInputCommand*& ResultCommand)
 		}
 		[[likely]]default:
 		{
-			TObjectPtr<UGameplayInputCommand> HighestPriorityCommand = nullptr;
+			TObjectPtr<UGameplayInputCommandInstance> HighestPriorityCommand = nullptr;
 			uint8 HighestPriority = 0;
 
-			for (const TObjectPtr<UGameplayInputCommand> CurrentCommand : GameplayInputCommandQueue)
+			for (const TObjectPtr<UGameplayInputCommandInstance> CurrentCommand : GameplayInputCommandQueue)
 			{
 				if (!CurrentCommand)
 				{
@@ -152,7 +152,7 @@ bool UGameplayInputArbiter::ReceiveGameplayInput(const FGameplayTag InputTag, EG
 	{
 		const FGameplayInputCommandConfig InputCommandConfig = GameplayInputDocker->GetCommandConfig(InputTag, InputType);
 
-		UGameplayInputCommand* NewInputCommand = NewObject<UGameplayInputCommand>(this);
+		UGameplayInputCommandInstance* NewInputCommand = NewObject<UGameplayInputCommandInstance>(this);
 		NewInputCommand->Initialize(InputTag, InputType, InputCommandConfig);
 
 		GameplayInputCommandQueue.Add(NewInputCommand);

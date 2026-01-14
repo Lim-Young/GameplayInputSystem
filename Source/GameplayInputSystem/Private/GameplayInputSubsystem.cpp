@@ -55,10 +55,10 @@ void UGameplayInputSubsystem::FinishAndUnregisterGameplayInputArbiter(UGameplayI
 {
 	if (GameplayInputArbiters.Contains(InGameplayInputDocker))
 	{
-		UGameplayInputCommand* ResultCommand;
-		if (GameplayInputArbiters[InGameplayInputDocker]->Finish(ResultCommand))
+		UGameplayInputCommandInstance* ResultCommandInstance;
+		if (GameplayInputArbiters[InGameplayInputDocker]->Finish(ResultCommandInstance))
 		{
-			BroadcastGameplayInputEvent(ResultCommand->InputTag, ResultCommand->InputType);
+			BroadcastGameplayInputEvent(ResultCommandInstance->InputTag, ResultCommandInstance->InputType);
 		}
 
 		GameplayInputArbiters.Remove(InGameplayInputDocker);

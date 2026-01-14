@@ -30,7 +30,7 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System",
 		meta = (Categories = GameplayInput, TitleProperty = "{InputTag}[{InputType}]"))
-	TMap<FGameplayInputCommandDefinition, FGameplayInputCommandConfig> InputCommands;
+	TMap<FGameplayInputCommand, FGameplayInputCommandConfig> InputCommands;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System")
 	EArbiterDeliberationMode DeliberationMode = EArbiterDeliberationMode::PriorityBased;
@@ -53,17 +53,17 @@ protected:
 	UGameplayInputDocket* GameplayInputDocker;
 
 	UPROPERTY()
-	TArray<TObjectPtr<UGameplayInputCommand>> GameplayInputCommandQueue;
+	TArray<TObjectPtr<UGameplayInputCommandInstance>> GameplayInputCommandQueue;
 
 private:
-	bool CheckIfTheCommandHasExpired(float CurrentTime, TObjectPtr<UGameplayInputCommand> CurrentCommand);
+	bool CheckIfTheCommandHasExpired(float CurrentTime, TObjectPtr<UGameplayInputCommandInstance> CurrentCommand);
 
 public:
 	void Initialize(UGameplayInputDocket* InGameplayInputDocker);
 
 	void Start();
 	void Cancel();
-	bool Finish(UGameplayInputCommand*& ResultCommand);
+	bool Finish(UGameplayInputCommandInstance*& ResultCommand);
 
 	bool ReceiveGameplayInput(FGameplayTag InputTag, EGameplayInputType InputType);
 };

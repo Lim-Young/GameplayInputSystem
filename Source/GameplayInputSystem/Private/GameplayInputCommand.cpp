@@ -3,24 +3,24 @@
 
 #include "GameplayInputCommand.h"
 
-FGameplayInputCommandDefinition::FGameplayInputCommandDefinition()
+FGameplayInputCommand::FGameplayInputCommand()
 {
 	InputTag = FGameplayTag::EmptyTag;
 	InputType = EGameplayInputType::Action;
 }
 
-FGameplayInputCommandDefinition::FGameplayInputCommandDefinition(const FGameplayTag InputTag, const EGameplayInputType InputType)
+FGameplayInputCommand::FGameplayInputCommand(const FGameplayTag InputTag, const EGameplayInputType InputType)
 {
 	this->InputTag = InputTag;
 	this->InputType = InputType;
 }
 
-bool FGameplayInputCommandDefinition::operator==(const FGameplayInputCommandDefinition& Other) const
+bool FGameplayInputCommand::operator==(const FGameplayInputCommand& Other) const
 {
 	return InputTag == Other.InputTag && InputType == Other.InputType;
 }
 
-void UGameplayInputCommand::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
+void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
                                        uint8 InPriority, float InLifetime, float InTimestamp)
 {
 	InputTag = InInputTag;
@@ -31,7 +31,7 @@ void UGameplayInputCommand::Initialize(const FGameplayTag& InInputTag, const EGa
 	Timestamp = InTimestamp;
 }
 
-void UGameplayInputCommand::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
+void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
                                        const FGameplayInputCommandConfig& InConfig)
 {
 	Initialize(InInputTag, InInputType, InConfig.Priority, InConfig.Lifetime, GetWorld()->GetTimeSeconds());
