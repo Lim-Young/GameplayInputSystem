@@ -9,7 +9,7 @@
 #include "GameplayInputCommand.generated.h"
 
 USTRUCT(BlueprintType)
-struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandType
+struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandDefinition
 {
 	GENERATED_BODY()
 
@@ -19,17 +19,17 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandType
 	UPROPERTY(EditAnywhere)
 	EGameplayInputType InputType;
 
-	FGameplayInputCommandType();
+	FGameplayInputCommandDefinition();
 
-	FGameplayInputCommandType(const FGameplayTag InputTag, const EGameplayInputType InputType);
+	FGameplayInputCommandDefinition(const FGameplayTag InputTag, const EGameplayInputType InputType);
 
 	// GetTypeHash
-	friend uint32 GetTypeHash(const FGameplayInputCommandType& Entry)
+	friend uint32 GetTypeHash(const FGameplayInputCommandDefinition& Entry)
 	{
 		return HashCombine(GetTypeHash(Entry.InputTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
 	}
 
-	bool operator==(const FGameplayInputCommandType& Other) const;
+	bool operator==(const FGameplayInputCommandDefinition& Other) const;
 };
 
 USTRUCT(BlueprintType)

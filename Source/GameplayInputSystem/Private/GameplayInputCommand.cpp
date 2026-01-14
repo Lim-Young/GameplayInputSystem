@@ -3,19 +3,19 @@
 
 #include "GameplayInputCommand.h"
 
-FGameplayInputCommandType::FGameplayInputCommandType()
+FGameplayInputCommandDefinition::FGameplayInputCommandDefinition()
 {
 	InputTag = FGameplayTag::EmptyTag;
 	InputType = EGameplayInputType::Action;
 }
 
-FGameplayInputCommandType::FGameplayInputCommandType(const FGameplayTag InputTag, const EGameplayInputType InputType)
+FGameplayInputCommandDefinition::FGameplayInputCommandDefinition(const FGameplayTag InputTag, const EGameplayInputType InputType)
 {
 	this->InputTag = InputTag;
 	this->InputType = InputType;
 }
 
-bool FGameplayInputCommandType::operator==(const FGameplayInputCommandType& Other) const
+bool FGameplayInputCommandDefinition::operator==(const FGameplayInputCommandDefinition& Other) const
 {
 	return InputTag == Other.InputTag && InputType == Other.InputType;
 }

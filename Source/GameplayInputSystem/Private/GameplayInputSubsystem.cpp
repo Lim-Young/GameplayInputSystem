@@ -3,8 +3,7 @@
 
 #include "GameplayInputSubsystem.h"
 
-UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput, "GameplayInput",
-                               "Tag used to identify gameplay input actions. This tag is used to differentiate between gameplay-related inputs and other types of inputs.")
+#include "GameplayInputSystemTags.h"
 
 void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputTag, const EGameplayInputType InputType)
 {
@@ -32,6 +31,7 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputTag, 
 			return;
 		}
 	}
+
 
 	BroadcastGameplayInputEvent(InputTag, InputType);
 }

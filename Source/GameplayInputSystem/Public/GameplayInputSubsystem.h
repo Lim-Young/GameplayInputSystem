@@ -3,14 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayInputActionSet.h"
 #include "GameplayInputArbiter.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
-#include "NativeGameplayTags.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayInputSubsystem.generated.h"
-
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayInput)
 
 /**
  * 

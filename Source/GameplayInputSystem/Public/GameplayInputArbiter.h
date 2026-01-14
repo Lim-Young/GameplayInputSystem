@@ -30,7 +30,7 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System",
 		meta = (Categories = GameplayInput, TitleProperty = "{InputTag}[{InputType}]"))
-	TMap<FGameplayInputCommandType, FGameplayInputCommandConfig> InputCommands;
+	TMap<FGameplayInputCommandDefinition, FGameplayInputCommandConfig> InputCommands;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System")
 	EArbiterDeliberationMode DeliberationMode = EArbiterDeliberationMode::PriorityBased;

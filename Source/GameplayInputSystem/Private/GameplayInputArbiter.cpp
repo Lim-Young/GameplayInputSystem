@@ -6,13 +6,13 @@
 
 bool UGameplayInputDocket::HasCommand(const FGameplayTag& InputTag, EGameplayInputType InputType) const
 {
-	return InputCommands.Contains(FGameplayInputCommandType(InputTag, InputType));
+	return InputCommands.Contains(FGameplayInputCommandDefinition(InputTag, InputType));
 }
 
 FGameplayInputCommandConfig& UGameplayInputDocket::GetCommandConfig(const FGameplayTag& InputTag,
                                                                     EGameplayInputType InputType)
 {
-	return InputCommands.FindChecked(FGameplayInputCommandType(InputTag, InputType));
+	return InputCommands.FindChecked(FGameplayInputCommandDefinition(InputTag, InputType));
 }
 
 void UGameplayInputArbiter::Initialize(UGameplayInputDocket* InGameplayInputDocker)
