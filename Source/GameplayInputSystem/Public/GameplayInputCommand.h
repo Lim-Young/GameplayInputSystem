@@ -23,20 +23,20 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommand
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, meta=(Categories = GameplayInput))
-	FGameplayTag InputTag;
+	UPROPERTY(EditAnywhere, meta=(Categories = GameplayInput_Source))
+	FGameplayTag InputSourceTag;
 
 	UPROPERTY(EditAnywhere)
 	EGameplayInputType InputType;
 
 	FGameplayInputCommand();
 
-	FGameplayInputCommand(const FGameplayTag InputTag, const EGameplayInputType InputType);
+	FGameplayInputCommand(const FGameplayTag InputSourceTag, const EGameplayInputType InputType);
 
 	// GetTypeHash
 	friend uint32 GetTypeHash(const FGameplayInputCommand& Entry)
 	{
-		return HashCombine(GetTypeHash(Entry.InputTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
+		return HashCombine(GetTypeHash(Entry.InputSourceTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
 	}
 
 	bool operator==(const FGameplayInputCommand& Other) const;
@@ -60,14 +60,14 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputCommandInstance : public UObject
 	GENERATED_BODY()
 
 public:
-	void Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType, uint8 InPriority,
+	void Initialize(const FGameplayTag& InInputSourceTag, const EGameplayInputType InInputType, uint8 InPriority,
 	                float InLifetime, float InTimestamp);
 
-	void Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
+	void Initialize(const FGameplayTag& InInputSourceTag, const EGameplayInputType InInputType,
 	                const FGameplayInputCommandConfig& InConfig);
 
 public:
-	FGameplayTag InputTag;
+	FGameplayTag InputSourceTag;
 	EGameplayInputType InputType;
 	uint8 Priority = 0;
 	float Lifetime = 0.0f;

@@ -4,4 +4,8 @@
 #include "GameplayInputSystemTags.h"
 
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput, "GameplayInput",
-							   "Tag used to identify gameplay input actions. This tag is used to differentiate between gameplay-related inputs and other types of inputs.")
+                               "Gameplay Input System Root Tag")
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput_Source, "GameplayInput.Source",
+                               "Identifies the source of the gameplay input, This will be mapping to different input devices or systems.")
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput_Action, "GameplayInput.Action",
+                               "Identifies a gameplay input action, This will be mapping to different gameplay input action sets.")

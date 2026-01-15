@@ -17,7 +17,7 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputSystemLibrary : public UBlueprintFun
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System",
-		meta = (GameplayTagFilter = GameplayInput, AutoCreateRefTerm = "InputTag", WorldContext = "WorldContextObject"))
-	static void InjectGameplayInput(UObject* WorldContextObject, const FGameplayTag& InputTag,
+		meta = (GameplayTagFilter = GameplayInput_Source, AutoCreateRefTerm = "InputTag", WorldContext = "WorldContextObject"))
+	static void InjectGameplayInput(UObject* WorldContextObject, const FGameplayTag& InputSourceTag,
 	                                const EGameplayInputType InputType);
 };

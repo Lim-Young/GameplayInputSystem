@@ -3,7 +3,7 @@
 
 #include "GameplayInputSystemLibrary.h"
 
-void UGameplayInputSystemLibrary::InjectGameplayInput(UObject* WorldContextObject, const FGameplayTag& InputTag,
+void UGameplayInputSystemLibrary::InjectGameplayInput(UObject* WorldContextObject, const FGameplayTag& InputSourceTag,
                                                       const EGameplayInputType InputType)
 {
 	const UWorld* World = WorldContextObject->GetWorld();
@@ -11,7 +11,7 @@ void UGameplayInputSystemLibrary::InjectGameplayInput(UObject* WorldContextObjec
 	{
 		if (UGameplayInputSubsystem* GameplayInputSubsystem = World->GetSubsystem<UGameplayInputSubsystem>())
 		{
-			GameplayInputSubsystem->InjectGameplayInput(InputTag, InputType);
+			GameplayInputSubsystem->InjectGameplayInput(InputSourceTag, InputType);
 		}
 	}
 }

@@ -6,9 +6,9 @@
 #include "GameplayInputSystemTags.h"
 #include "InputAction/GameplayInputActionSet.h"
 
-void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputTag, const EGameplayInputType InputType)
+void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputSourceTag, const EGameplayInputType InputType)
 {
-	if (!InputTag.MatchesTag(GameplayInput))
+	if (!InputSourceTag.MatchesTag(GameplayInput))
 	{
 		return;
 	}
@@ -24,7 +24,7 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputTag, 
 				continue;
 			}
 
-			bHasValidArbiter |= ArbiterPair.Value->ReceiveGameplayInput(InputTag, InputType);
+			bHasValidArbiter |= ArbiterPair.Value->ReceiveGameplayInput(InputSourceTag, InputType);
 		}
 
 		if (bHasValidArbiter)
@@ -33,9 +33,9 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputTag, 
 		}
 	}
 
-	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputCommand(InputTag, InputType));
+	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputCommand(InputSourceTag, InputType));
 
-	BroadcastGameplayInputEvent(InputTag, InputType);
+	BroadcastGameplayInputEvent(InputSourceTag, InputType);
 }
 
 void UGameplayInputSubsystem::CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker)
@@ -60,7 +60,7 @@ void UGameplayInputSubsystem::FinishAndUnregisterGameplayInputArbiter(UGameplayI
 		UGameplayInputCommandInstance* ResultCommandInstance;
 		if (GameplayInputArbiters[InGameplayInputDocker]->Finish(ResultCommandInstance))
 		{
-			BroadcastGameplayInputEvent(ResultCommandInstance->InputTag, ResultCommandInstance->InputType);
+			BroadcastGameplayInputEvent(ResultCommandInstance->InputSourceTag, ResultCommandInstance->InputType);
 		}
 
 		GameplayInputArbiters.Remove(InGameplayInputDocker);
@@ -108,20 +108,20 @@ void UGameplayInputSubsystem::RemoveGameplayInputActionSet(UGameplayInputActionS
 	}
 }
 
-void UGameplayInputSubsystem::ForceTriggerGameplayInputAction(const FGameplayTag& ActionTag,
+void UGameplayInputSubsystem::ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag,
                                                               const EGameplayInputActionState ActionState)
 {
-	BroadcastGameplayInputActionTriggered(ActionTag, ActionState);
+	BroadcastGameplayInputActionTriggered(InputActionTag, ActionState);
 }
 
-void UGameplayInputSubsystem::BroadcastGameplayInputEvent(const FGameplayTag& InputTag,
+void UGameplayInputSubsystem::BroadcastGameplayInputEvent(const FGameplayTag& InputSourceTag,
                                                           const EGameplayInputType InputType) const
 {
-	OnGameplayInputEvent.Broadcast(InputTag, InputType);
+	OnGameplayInputEvent.Broadcast(InputSourceTag, InputType);
 }
 
-void UGameplayInputSubsystem::BroadcastGameplayInputActionTriggered(const FGameplayTag& ActionTag,
+void UGameplayInputSubsystem::BroadcastGameplayInputActionTriggered(const FGameplayTag& InputActionTag,
                                                                     const EGameplayInputActionState ActionState) const
 {
-	OnGameplayInputActionTriggered.Broadcast(ActionTag, ActionState);
+	OnGameplayInputActionTriggered.Broadcast(InputActionTag, ActionState);
 }

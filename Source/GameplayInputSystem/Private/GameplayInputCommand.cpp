@@ -5,25 +5,25 @@
 
 FGameplayInputCommand::FGameplayInputCommand()
 {
-	InputTag = FGameplayTag::EmptyTag;
+	InputSourceTag = FGameplayTag::EmptyTag;
 	InputType = EGameplayInputType::Pressed;
 }
 
-FGameplayInputCommand::FGameplayInputCommand(const FGameplayTag InputTag, const EGameplayInputType InputType)
+FGameplayInputCommand::FGameplayInputCommand(const FGameplayTag InputSourceTag, const EGameplayInputType InputType)
 {
-	this->InputTag = InputTag;
+	this->InputSourceTag = InputSourceTag;
 	this->InputType = InputType;
 }
 
 bool FGameplayInputCommand::operator==(const FGameplayInputCommand& Other) const
 {
-	return InputTag == Other.InputTag && InputType == Other.InputType;
+	return InputSourceTag == Other.InputSourceTag && InputType == Other.InputType;
 }
 
-void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
-                                       uint8 InPriority, float InLifetime, float InTimestamp)
+void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputSourceTag, const EGameplayInputType InInputType,
+                                               uint8 InPriority, float InLifetime, float InTimestamp)
 {
-	InputTag = InInputTag;
+	InputSourceTag = InInputSourceTag;
 	InputType = InInputType;
 	Priority = InPriority;
 	Lifetime = InLifetime;
@@ -31,8 +31,8 @@ void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputTag, c
 	Timestamp = InTimestamp;
 }
 
-void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
-                                       const FGameplayInputCommandConfig& InConfig)
+void UGameplayInputCommandInstance::Initialize(const FGameplayTag& InInputSourceTag, const EGameplayInputType InInputType,
+                                               const FGameplayInputCommandConfig& InConfig)
 {
-	Initialize(InInputTag, InInputType, InConfig.Priority, InConfig.Lifetime, GetWorld()->GetTimeSeconds());
+	Initialize(InInputSourceTag, InInputType, InConfig.Priority, InConfig.Lifetime, GetWorld()->GetTimeSeconds());
 }

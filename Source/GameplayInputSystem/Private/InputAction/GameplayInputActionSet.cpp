@@ -111,7 +111,7 @@ void UGameplayInputAction::SetActionState(const EGameplayInputActionState NewAct
 	if (bBroadcastEvent)
 	{
 		check(OwningActionSet);
-		OwningActionSet->TriggerGameplayInputAction(ActionTag, NewActionState);
+		OwningActionSet->TriggerGameplayInputAction(InputActionTag, NewActionState);
 	}
 }
 
@@ -248,11 +248,11 @@ bool UGameplayInputActionSet::HandleInput(const FGameplayInputCommand& InInputCo
 	return true;
 }
 
-void UGameplayInputActionSet::TriggerGameplayInputAction(const FGameplayTag& ActionTag,
+void UGameplayInputActionSet::TriggerGameplayInputAction(const FGameplayTag& InputActionTag,
                                                          const EGameplayInputActionState ActionState) const
 {
 	if (IsValid(OwningSubsystem))
 	{
-		OwningSubsystem->ForceTriggerGameplayInputAction(ActionTag, ActionState);
+		OwningSubsystem->ForceTriggerGameplayInputAction(InputActionTag, ActionState);
 	}
 }

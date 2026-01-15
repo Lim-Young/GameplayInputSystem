@@ -75,10 +75,9 @@ class UGameplayInputAction : public UObject
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action", meta = (Categories = GameplayInput_Action))
-	FGameplayTag ActionTag;
+	FGameplayTag InputActionTag;
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action", Instanced,
-		meta = (Categories = GameplayInput, TitleProperty = "{InputTag}[{InputType}]"))
+	UPROPERTY(EditAnywhere, Instanced, Category = "Gameplay Input Action")
 	TArray<TObjectPtr<UGameplayInputActionTrigger>> Triggers;
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action")
@@ -129,6 +128,6 @@ public:
 	bool HandleInput(const FGameplayInputCommand& InInputCommand);
 
 private:
-	void TriggerGameplayInputAction(const FGameplayTag& ActionTag,
+	void TriggerGameplayInputAction(const FGameplayTag& InputActionTag,
 	                                const EGameplayInputActionState ActionState) const;
 };
