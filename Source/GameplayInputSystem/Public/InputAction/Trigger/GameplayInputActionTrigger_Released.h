@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "InputAction/GameplayInputActionSet.h"
-#include "GameplayInputActionTrigger_Pressed.generated.h"
+#include "GameplayInputActionTrigger_Released.generated.h"
 
-UCLASS(DisplayName = "Pressed (按下)")
-class UGameplayInputActionTrigger_Pressed : public UGameplayInputActionTrigger
+/**
+ * 
+ */
+UCLASS(DisplayName = "Released (松开)")
+class GAMEPLAYINPUTSYSTEM_API UGameplayInputActionTrigger_Released : public UGameplayInputActionTrigger
 {
 	GENERATED_BODY()
 

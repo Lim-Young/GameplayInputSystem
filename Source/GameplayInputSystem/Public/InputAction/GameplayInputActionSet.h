@@ -33,11 +33,29 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool CheckInputCommandCanBeCaptured(const FGameplayInputCommand& InInputCommand);
 
+	/**
+	 * 该函数将在触发器开始后自动调用，用于验证触发器是否可以立即完成。
+	 * 若返回true，触发器将立即完成；若返回false，触发器将继续其执行流程，你需要自行维护触发器的状态，并在适当时机调用FinishTrigger函数以结束触发器。
+	 * 
+	 * This function will be called automatically after the trigger begins to validate whether the trigger can finish immediately.
+	 * If it returns true, the trigger will finish immediately; if it returns false, the trigger will continue its execution flow,
+	 * and you need to maintain the trigger's state yourself and call the FinishTrigger function at the appropriate time to end the trigger.
+	 * @return True if the trigger can finish immediately, false if it needs to continue executing.
+	 */
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool ValidateTriggerCanFinish();
 
 	void BeginTrigger(const FGameplayInputCommand& InInputCommand);
 
+	/**
+	 * 该函数在触发器开始时调用。
+	 * 你可以使用此事件来初始化任何必要的变量或状态，或设置一些定时器来控制触发器的流程。
+	 *
+	 * This event is called when the trigger begins.
+	 * You can use this event to initialize any necessary variables or states.
+	 * Or set some timers to control the trigger flow.
+	 * @param InInputCommand The input command that triggered this action.
+	 */
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	void OnTriggerBegin(const FGameplayInputCommand& InInputCommand);
 
@@ -46,6 +64,15 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	void OnResetTrigger();
 
+	/**
+	 * 当 FinishTrigger 被调用时，会先触发该回调事件，这是你最后一次机会在触发器所属的动作完成之前执行任何清理或状态更新操作。
+	 * 一般情况下，若你的相关逻辑无需依赖触发器所属动作的状态变化，你可以选择在 OnResetTrigger 中处理清理工作。
+	 * 
+	 * This callback event is triggered when FinishTrigger is called, which is your last chance to perform any cleanup or state update operations before the action to which the trigger belongs is completed.
+	 * In general, if your related logic does not need to rely on the state changes of the action to which the trigger belongs, you can choose to handle the cleanup work in OnResetTrigger.
+	 * @param bWasSuccessful True if the action was completed successfully, false if it failed.
+	 * @param bCanceled True if the action was canceled, valid only if bWasSuccessful is false.
+	 */
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	void PreTriggerFinished(bool bWasSuccessful, bool bCanceled = false);
 
@@ -74,7 +101,7 @@ class UGameplayInputAction : public UObject
 	friend class UGameplayInputActionSet;
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action", meta = (Categories = GameplayInput_Action))
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action", meta = (Categories = "GameplayInput.InputAction"))
 	FGameplayTag InputActionTag;
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Gameplay Input Action")

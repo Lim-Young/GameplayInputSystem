@@ -1,0 +1,102 @@
+[
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Shoulder.Left",
+		"Tag": "GameplayInput.InputSource.Gamepad.Shoulder.Left",
+		"DevComment": "手柄 左肩键 (LB)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Shoulder.Right",
+		"Tag": "GameplayInput.InputSource.Gamepad.Shoulder.Right",
+		"DevComment": "手柄 右肩键 (RB)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Trigger.Left",
+		"Tag": "GameplayInput.InputSource.Gamepad.Trigger.Left",
+		"DevComment": "手柄 左扳机键 (LT)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Trigger.Right",
+		"Tag": "GameplayInput.InputSource.Gamepad.Trigger.Right",
+		"DevComment": "手柄 右扳机键 (RT)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Stick.Left",
+		"Tag": "GameplayInput.InputSource.Gamepad.Stick.Left",
+		"DevComment": "手柄 左摇杆键 (L3)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Stick.Left.Axis.X",
+		"Tag": "GameplayInput.InputSource.Gamepad.Stick.Left.Axis.X",
+		"DevComment": "手柄 左摇杆 横向轴"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Stick.Left.Axis.Y",
+		"Tag": "GameplayInput.InputSource.Gamepad.Stick.Left.Axis.Y",
+		"DevComment": "手柄 左摇杆 纵向轴"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Stick.Right",
+		"Tag": "GameplayInput.InputSource.Gamepad.Stick.Right",
+		"DevComment": "手柄 右摇杆键 (R3)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Stick.Right.Axis.X",
+		"Tag": "GameplayInput.InputSource.Gamepad.Stick.Right.Axis.X",
+		"DevComment": "手柄 右摇杆 横向轴"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Stick.Right.Axis.Y",
+		"Tag": "GameplayInput.InputSource.Gamepad.Stick.Right.Axis.Y",
+		"DevComment": "手柄 右摇杆 纵向轴"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.DPad.Up",
+		"Tag": "GameplayInput.InputSource.Gamepad.DPad.Up",
+		"DevComment": "手柄 十字键 上"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.DPad.Down",
+		"Tag": "GameplayInput.InputSource.Gamepad.DPad.Down",
+		"DevComment": "手柄 十字键 下"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.DPad.Left",
+		"Tag": "GameplayInput.InputSource.Gamepad.DPad.Left",
+		"DevComment": "手柄 十字键 左"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.DPad.Right",
+		"Tag": "GameplayInput.InputSource.Gamepad.DPad.Right",
+		"DevComment": "手柄 十字键 右"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.FaceButton.Up",
+		"Tag": "GameplayInput.InputSource.Gamepad.FaceButton.Up",
+		"DevComment": "手柄 功能键 上 (Y)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.FaceButton.Down",
+		"Tag": "GameplayInput.InputSource.Gamepad.FaceButton.Down",
+		"DevComment": "手柄 功能键 下 (A)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.FaceButton.Left",
+		"Tag": "GameplayInput.InputSource.Gamepad.FaceButton.Left",
+		"DevComment": "手柄 功能键 左 (X)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.FaceButton.Right",
+		"Tag": "GameplayInput.InputSource.Gamepad.FaceButton.Right",
+		"DevComment": "手柄 功能键 右 (B)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Menu.Select",
+		"Tag": "GameplayInput.InputSource.Gamepad.Menu.Select",
+		"DevComment": "手柄 选项键 (Start)"
+	},
+	{
+		"Name": "GameplayInput.InputSource.Gamepad.Menu.Back",
+		"Tag": "GameplayInput.InputSource.Gamepad.Menu.Back",
+		"DevComment": "手柄 返回键 (Back)"
+	}
+]

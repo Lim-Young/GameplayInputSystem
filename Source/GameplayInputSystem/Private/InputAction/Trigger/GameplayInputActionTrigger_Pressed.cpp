@@ -6,10 +6,16 @@
 bool UGameplayInputActionTrigger_Pressed::CheckInputCommandCanBeCaptured_Implementation(
 	const FGameplayInputCommand& InInputCommand)
 {
-	if (PressedCommand == InInputCommand)
+	if (InInputCommand.InputSourceTag != InputSourceTag)
+	{
+		return false;
+	}
+
+	if (InInputCommand.InputType == EGameplayInputType::Pressed)
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -20,9 +26,5 @@ bool UGameplayInputActionTrigger_Pressed::ValidateTriggerCanFinish_Implementatio
 		return false;
 	}
 
-	if (CapturedInputCommands[0] == PressedCommand)
-	{
-		return true;
-	}
-	return false;
+	return true;
 }

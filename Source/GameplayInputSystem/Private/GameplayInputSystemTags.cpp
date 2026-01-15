@@ -5,7 +5,7 @@
 
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput, "GameplayInput",
                                "Gameplay Input System Root Tag")
-UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput_Source, "GameplayInput.Source",
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput_Source, "GameplayInput.InputSource",
                                "Identifies the source of the gameplay input, This will be mapping to different input devices or systems.")
-UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput_Action, "GameplayInput.Action",
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayInput_Action, "GameplayInput.InputAction",
                                "Identifies a gameplay input action, This will be mapping to different gameplay input action sets.")

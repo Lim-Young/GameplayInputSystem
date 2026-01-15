@@ -23,7 +23,7 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommand
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, meta=(Categories = GameplayInput_Source))
+	UPROPERTY(EditAnywhere, meta=(Categories = "GameplayInput.InputSource"))
 	FGameplayTag InputSourceTag;
 
 	UPROPERTY(EditAnywhere)
