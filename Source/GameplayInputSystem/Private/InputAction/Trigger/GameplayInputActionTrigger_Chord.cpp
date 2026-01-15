@@ -4,7 +4,7 @@
 #include "InputAction/Trigger/GameplayInputActionTrigger_Chord.h"
 
 void UGameplayInputActionTrigger_Chord::OnTriggerBegin_Implementation(
-	const FGameplayInputCommand& InInputCommand)
+	const FGameplayInputSourceCommand& InInputCommand)
 {
 	if (ComboTimeout > 0.0f)
 	{
@@ -48,8 +48,8 @@ bool UGameplayInputActionTrigger_Chord::ValidateTriggerCanFinish_Implementation(
 		return true;
 	}
 
-	TSet<FGameplayInputCommand> CapturedSet;
-	for (const FGameplayInputCommand& Command : CapturedInputCommands)
+	TSet<FGameplayInputSourceCommand> CapturedSet;
+	for (const FGameplayInputSourceCommand& Command : CapturedInputCommands)
 	{
 		if (ComboCommands.Contains(Command))
 		{
@@ -61,7 +61,7 @@ bool UGameplayInputActionTrigger_Chord::ValidateTriggerCanFinish_Implementation(
 }
 
 bool UGameplayInputActionTrigger_Chord::CheckInputCommandCanBeCaptured_Implementation(
-	const FGameplayInputCommand& InInputCommand)
+	const FGameplayInputSourceCommand& InInputCommand)
 {
 	if (ComboCommands.Num() == 0)
 	{

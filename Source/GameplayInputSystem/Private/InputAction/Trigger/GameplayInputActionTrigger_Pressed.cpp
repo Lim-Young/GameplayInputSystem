@@ -4,7 +4,7 @@
 #include "InputAction/Trigger/GameplayInputActionTrigger_Pressed.h"
 
 bool UGameplayInputActionTrigger_Pressed::CheckInputCommandCanBeCaptured_Implementation(
-	const FGameplayInputCommand& InInputCommand)
+	const FGameplayInputSourceCommand& InInputCommand)
 {
 	if (InInputCommand.InputSourceTag != InputSourceTag)
 	{

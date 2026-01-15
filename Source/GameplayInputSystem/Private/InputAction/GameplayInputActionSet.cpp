@@ -6,12 +6,12 @@
 #include "GameplayInputSubsystem.h"
 
 bool UGameplayInputActionTrigger::CheckInputCommandCanBeCaptured_Implementation(
-	const FGameplayInputCommand& InInputCommand)
+	const FGameplayInputSourceCommand& InInputCommand)
 {
 	return false;
 }
 
-bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputCommand& InInputCommand)
+bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSourceCommand& InInputCommand)
 {
 	// TODO:
 	if (CheckInputCommandCanBeCaptured(InInputCommand))
@@ -29,7 +29,7 @@ bool UGameplayInputActionTrigger::ValidateTriggerCanFinish_Implementation()
 	return false;
 }
 
-void UGameplayInputActionTrigger::BeginTrigger(const FGameplayInputCommand& InInputCommand)
+void UGameplayInputActionTrigger::BeginTrigger(const FGameplayInputSourceCommand& InInputCommand)
 {
 	OwningInputAction->SetActionState(EGameplayInputActionState::Started);
 
@@ -51,7 +51,7 @@ void UGameplayInputActionTrigger::OnResetTrigger_Implementation()
 {
 }
 
-void UGameplayInputActionTrigger::OnTriggerBegin_Implementation(const FGameplayInputCommand& InInputCommand)
+void UGameplayInputActionTrigger::OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand)
 {
 	FinishTrigger(true);
 }
@@ -71,7 +71,7 @@ FTimerManager& UGameplayInputActionTrigger::GetTimerManager() const
 	return GetWorld()->GetTimerManager();
 }
 
-const TArray<FGameplayInputCommand>& UGameplayInputActionTrigger::GetCapturedInputCommands() const
+const TArray<FGameplayInputSourceCommand>& UGameplayInputActionTrigger::GetCapturedInputCommands() const
 {
 	return CapturedInputCommands;
 }
@@ -86,7 +86,7 @@ void UGameplayInputActionTrigger::SetReleaseInputCommands(const bool bInReleaseI
 	bReleaseInputCommands = bInReleaseInputCommands;
 }
 
-bool UGameplayInputAction::CheckCanActivateAction(const FGameplayInputCommand& InInputCommand)
+bool UGameplayInputAction::CheckCanActivateAction(const FGameplayInputSourceCommand& InInputCommand)
 {
 	// If the action is already ongoing, do not activate again
 	// if (CurrentActionState == EGameplayInputActionState::Ongoing)
@@ -130,10 +130,10 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 		}
 		else
 		{
-			const TArray<FGameplayInputCommand> CapturedInputCommands = ExecutingTrigger->GetCapturedInputCommands();
+			const TArray<FGameplayInputSourceCommand> CapturedInputCommands = ExecutingTrigger->GetCapturedInputCommands();
 			ExecutingTrigger->SetReleaseInputCommands(true);
 			// Failed, We should re-inject the captured input commands back to the action set for re-processing
-			for (FGameplayInputCommand InputCommand : CapturedInputCommands)
+			for (FGameplayInputSourceCommand InputCommand : CapturedInputCommands)
 			{
 				OwningActionSet->HandleInput(InputCommand);
 			}
@@ -153,7 +153,7 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 	SetActionState(EGameplayInputActionState::Idle, false);
 }
 
-void UGameplayInputAction::BeginAction(const FGameplayInputCommand& InInputCommand)
+void UGameplayInputAction::BeginAction(const FGameplayInputSourceCommand& InInputCommand)
 {
 	for (UGameplayInputActionTrigger* Trigger : Triggers)
 	{
@@ -215,7 +215,7 @@ UGameplayInputActionSet* UGameplayInputActionSet::CreateByTemplateObject(const U
 	return InputActionSetInstance;
 }
 
-bool UGameplayInputActionSet::HandleInput(const FGameplayInputCommand& InInputCommand)
+bool UGameplayInputActionSet::HandleInput(const FGameplayInputSourceCommand& InInputCommand)
 {
 	TArray<UGameplayInputAction*> MaxPriorityActions;
 	uint8 MaxPriority = 0;

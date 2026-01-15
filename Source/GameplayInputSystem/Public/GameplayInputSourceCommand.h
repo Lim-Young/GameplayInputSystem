@@ -6,7 +6,7 @@
 #include "GameplayInputSystemEnums.h"
 #include "UObject/Object.h"
 #include "GameplayTagContainer.h"
-#include "GameplayInputCommand.generated.h"
+#include "GameplayInputSourceCommand.generated.h"
 
 // TODO:
 UENUM(BlueprintType)
@@ -19,7 +19,7 @@ enum class EGameplayInputCommandCaptureMode : uint8
 };
 
 USTRUCT(BlueprintType)
-struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommand
+struct GAMEPLAYINPUTSYSTEM_API FGameplayInputSourceCommand
 {
 	GENERATED_BODY()
 
@@ -29,21 +29,21 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommand
 	UPROPERTY(EditAnywhere)
 	EGameplayInputType InputType;
 
-	FGameplayInputCommand();
+	FGameplayInputSourceCommand();
 
-	FGameplayInputCommand(const FGameplayTag InputSourceTag, const EGameplayInputType InputType);
+	FGameplayInputSourceCommand(const FGameplayTag InputSourceTag, const EGameplayInputType InputType);
 
 	// GetTypeHash
-	friend uint32 GetTypeHash(const FGameplayInputCommand& Entry)
+	friend uint32 GetTypeHash(const FGameplayInputSourceCommand& Entry)
 	{
 		return HashCombine(GetTypeHash(Entry.InputSourceTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
 	}
 
-	bool operator==(const FGameplayInputCommand& Other) const;
+	bool operator==(const FGameplayInputSourceCommand& Other) const;
 };
 
 USTRUCT(BlueprintType)
-struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandConfig
+struct GAMEPLAYINPUTSYSTEM_API FGameplayInputSourceCommandConfig
 {
 	GENERATED_BODY()
 
@@ -55,7 +55,7 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommandConfig
 };
 
 UCLASS()
-class GAMEPLAYINPUTSYSTEM_API UGameplayInputCommandInstance : public UObject
+class GAMEPLAYINPUTSYSTEM_API UGameplayInputSourceCommandInstance : public UObject
 {
 	GENERATED_BODY()
 
@@ -64,7 +64,7 @@ public:
 	                float InLifetime, float InTimestamp);
 
 	void Initialize(const FGameplayTag& InInputSourceTag, const EGameplayInputType InInputType,
-	                const FGameplayInputCommandConfig& InConfig);
+	                const FGameplayInputSourceCommandConfig& InConfig);
 
 public:
 	FGameplayTag InputSourceTag;

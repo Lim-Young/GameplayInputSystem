@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputCommand.h"
+#include "GameplayInputSourceCommand.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "UObject/Object.h"
@@ -30,14 +30,14 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System",
 		meta = (TitleProperty = "{InputSourceTag}[{InputType}]"))
-	TMap<FGameplayInputCommand, FGameplayInputCommandConfig> InputCommands;
+	TMap<FGameplayInputSourceCommand, FGameplayInputSourceCommandConfig> InputSources;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay Input System")
 	EArbiterDeliberationMode DeliberationMode = EArbiterDeliberationMode::PriorityBased;
 
 	bool HasCommand(const FGameplayTag& InputSourceTag, EGameplayInputType InputType) const;
 
-	FGameplayInputCommandConfig& GetCommandConfig(const FGameplayTag& InputSourceTag, EGameplayInputType InputType);
+	FGameplayInputSourceCommandConfig& GetCommandConfig(const FGameplayTag& InputSourceTag, EGameplayInputType InputType);
 };
 
 /**
@@ -53,17 +53,17 @@ protected:
 	UGameplayInputDocket* GameplayInputDocker;
 
 	UPROPERTY()
-	TArray<TObjectPtr<UGameplayInputCommandInstance>> GameplayInputCommandQueue;
+	TArray<TObjectPtr<UGameplayInputSourceCommandInstance>> GameplayInputCommandQueue;
 
 private:
-	bool CheckIfTheCommandHasExpired(float CurrentTime, TObjectPtr<UGameplayInputCommandInstance> CurrentCommand);
+	bool CheckIfTheCommandHasExpired(float CurrentTime, TObjectPtr<UGameplayInputSourceCommandInstance> CurrentCommand);
 
 public:
 	void Initialize(UGameplayInputDocket* InGameplayInputDocker);
 
 	void Start();
 	void Cancel();
-	bool Finish(UGameplayInputCommandInstance*& ResultCommand);
+	bool Finish(UGameplayInputSourceCommandInstance*& ResultCommand);
 
 	bool ReceiveGameplayInput(FGameplayTag InputSourceTag, EGameplayInputType InputType);
 };

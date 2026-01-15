@@ -18,6 +18,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger", meta = (Categories = GameplayInput_Source))
 	FGameplayTag InputSourceTag;
 
-	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputCommand& InInputCommand) override;
+	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual bool ValidateTriggerCanFinish_Implementation() override;
 };

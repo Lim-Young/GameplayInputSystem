@@ -13,7 +13,7 @@ class UGameplayInputActionTrigger_Chord : public UGameplayInputActionTrigger
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger")
-	TArray<FGameplayInputCommand> ComboCommands;
+	TArray<FGameplayInputSourceCommand> ComboCommands;
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger")
 	bool bInOrder = true;
@@ -25,10 +25,10 @@ public:
 protected:
 	FTimerHandle ComboTimeoutHandle;
 
-	virtual void OnTriggerBegin_Implementation(const FGameplayInputCommand& InInputCommand) override;
+	virtual void OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual void PreTriggerFinished_Implementation(bool bWasSuccessful, bool bCanceled = false) override;
 	virtual bool ValidateTriggerCanFinish_Implementation() override;
-	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputCommand& InInputCommand) override;
+	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 
 	void OnComboTimeout();
 };

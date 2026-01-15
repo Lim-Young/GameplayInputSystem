@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputCommand.h"
+#include "GameplayInputSourceCommand.h"
 #include "GameplayInputSystemEnums.h"
 #include "UObject/Object.h"
 #include "GameplayTagContainer.h"
@@ -25,13 +25,13 @@ protected:
 	UPROPERTY()
 	UGameplayInputAction* OwningInputAction = nullptr;
 
-	TArray<FGameplayInputCommand> CapturedInputCommands;
+	TArray<FGameplayInputSourceCommand> CapturedInputCommands;
 
 public:
-	bool CaptureInputCommand(const FGameplayInputCommand& InInputCommand);
+	bool CaptureInputCommand(const FGameplayInputSourceCommand& InInputCommand);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
-	bool CheckInputCommandCanBeCaptured(const FGameplayInputCommand& InInputCommand);
+	bool CheckInputCommandCanBeCaptured(const FGameplayInputSourceCommand& InInputCommand);
 
 	/**
 	 * 该函数将在触发器开始后自动调用，用于验证触发器是否可以立即完成。
@@ -45,7 +45,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool ValidateTriggerCanFinish();
 
-	void BeginTrigger(const FGameplayInputCommand& InInputCommand);
+	void BeginTrigger(const FGameplayInputSourceCommand& InInputCommand);
 
 	/**
 	 * 该函数在触发器开始时调用。
@@ -57,7 +57,7 @@ public:
 	 * @param InInputCommand The input command that triggered this action.
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
-	void OnTriggerBegin(const FGameplayInputCommand& InInputCommand);
+	void OnTriggerBegin(const FGameplayInputSourceCommand& InInputCommand);
 
 	void ResetTrigger();
 
@@ -83,7 +83,7 @@ protected:
 	FTimerManager& GetTimerManager() const;
 
 public:
-	const TArray<FGameplayInputCommand>& GetCapturedInputCommands() const;
+	const TArray<FGameplayInputSourceCommand>& GetCapturedInputCommands() const;
 	bool IsReleasingInputCommands() const;
 	void SetReleaseInputCommands(bool bInReleaseInputCommands);
 };
@@ -117,11 +117,11 @@ private:
 	UGameplayInputActionSet* OwningActionSet = nullptr;
 
 public:
-	bool CheckCanActivateAction(const FGameplayInputCommand& InInputCommand);
+	bool CheckCanActivateAction(const FGameplayInputSourceCommand& InInputCommand);
 	void SetActionState(EGameplayInputActionState NewActionState, bool bBroadcastEvent = true);
 	void FinishAction(UGameplayInputActionTrigger* ExecutingTrigger, bool bWasSuccessful, bool bCanceled = false);
 
-	void BeginAction(const FGameplayInputCommand& InInputCommand);
+	void BeginAction(const FGameplayInputSourceCommand& InInputCommand);
 };
 
 /**
@@ -152,7 +152,7 @@ private:
 	TObjectPtr<UGameplayInputSubsystem> OwningSubsystem = nullptr;
 
 public:
-	bool HandleInput(const FGameplayInputCommand& InInputCommand);
+	bool HandleInput(const FGameplayInputSourceCommand& InInputCommand);
 
 private:
 	void TriggerGameplayInputAction(const FGameplayTag& InputActionTag,

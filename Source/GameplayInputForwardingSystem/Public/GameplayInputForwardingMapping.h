@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputCommand.h"
+#include "GameplayInputSourceCommand.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "UObject/Object.h"

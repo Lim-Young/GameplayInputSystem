@@ -33,7 +33,7 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputSourc
 		}
 	}
 
-	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputCommand(InputSourceTag, InputType));
+	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputSourceCommand(InputSourceTag, InputType));
 
 	BroadcastGameplayInputEvent(InputSourceTag, InputType);
 }
@@ -57,7 +57,7 @@ void UGameplayInputSubsystem::FinishAndUnregisterGameplayInputArbiter(UGameplayI
 {
 	if (GameplayInputArbiters.Contains(InGameplayInputDocker))
 	{
-		UGameplayInputCommandInstance* ResultCommandInstance;
+		UGameplayInputSourceCommandInstance* ResultCommandInstance;
 		if (GameplayInputArbiters[InGameplayInputDocker]->Finish(ResultCommandInstance))
 		{
 			BroadcastGameplayInputEvent(ResultCommandInstance->InputSourceTag, ResultCommandInstance->InputType);
