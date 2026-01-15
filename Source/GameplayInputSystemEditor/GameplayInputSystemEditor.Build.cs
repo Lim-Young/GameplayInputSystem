@@ -22,6 +22,8 @@ public class GameplayInputSystemEditor : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UnrealEd",
+				"EditorWidgets",
+				"InputCore",
 				"GameplayInputSystem"
 			}
 		);

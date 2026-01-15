@@ -6,7 +6,7 @@
 FGameplayInputCommand::FGameplayInputCommand()
 {
 	InputTag = FGameplayTag::EmptyTag;
-	InputType = EGameplayInputType::Action;
+	InputType = EGameplayInputType::Pressed;
 }
 
 FGameplayInputCommand::FGameplayInputCommand(const FGameplayTag InputTag, const EGameplayInputType InputType)

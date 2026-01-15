@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputActionSet.h"
 #include "GameplayInputArbiter.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayInputSubsystem.generated.h"
+
+class UGameplayInputActionSet;
 
 /**
  * 
@@ -28,13 +29,25 @@ private:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputEvent, const FGameplayTag&, InputTag,
 	                                             const EGameplayInputType, InputType);
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputActionTriggered, const FGameplayTag&, ActionTag,
+	                                             const EGameplayInputActionState, ActionState);
+
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Input System|Events")
 	FOnGameplayInputEvent OnGameplayInputEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Gameplay Input System|Events")
+	FOnGameplayInputActionTriggered OnGameplayInputActionTriggered;
+
 private:
 	UPROPERTY()
 	TMap<TObjectPtr<UGameplayInputDocket>, TObjectPtr<UGameplayInputArbiter>> GameplayInputArbiters;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UGameplayInputActionSet>> ActiveGameplayInputActionSets;
+
+	UPROPERTY()
+	TMap<TObjectPtr<UGameplayInputActionSet>, TObjectPtr<UGameplayInputActionSet>> GameplayInputActionSetMapping;
 
 public:
 	void InjectGameplayInput(const FGameplayTag& InputTag, const EGameplayInputType InputType);
@@ -45,6 +58,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
 	void FinishAndUnregisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker);
 
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
+	void AddGameplayInputActionSet(UGameplayInputActionSet* InInputActionSet, uint8 Priority = 0);
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
+	void RemoveGameplayInputActionSet(UGameplayInputActionSet* InInputActionSet);
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
+	void ForceTriggerGameplayInputAction(
+		const FGameplayTag& ActionTag,
+		EGameplayInputActionState ActionState);
+
 private:
 	void BroadcastGameplayInputEvent(const FGameplayTag& InputTag, EGameplayInputType InputType) const;
+	void BroadcastGameplayInputActionTriggered(const FGameplayTag& ActionTag,
+	                                           const EGameplayInputActionState ActionState) const;
 };

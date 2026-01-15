@@ -8,6 +8,16 @@
 #include "GameplayTagContainer.h"
 #include "GameplayInputCommand.generated.h"
 
+// TODO:
+UENUM(BlueprintType)
+enum class EGameplayInputCommandCaptureMode : uint8
+{
+	None UMETA(DisplayName = "None (不捕获)"),
+	// 捕获失败时则清空已有捕获命令
+	FailClearExisting UMETA(DisplayName = "Fail Clear Existing (捕获失败则清空已有捕获命令)"),
+	//
+};
+
 USTRUCT(BlueprintType)
 struct GAMEPLAYINPUTSYSTEM_API FGameplayInputCommand
 {

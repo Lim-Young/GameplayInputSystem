@@ -15,12 +15,24 @@ UCLASS()
 class UGameplayInputDocketFactory : public UFactory
 {
 	GENERATED_BODY()
-	
+
 public:
 	UGameplayInputDocketFactory();
 
 	virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
-		UObject* Context, FFeedbackContext* Warn) override;
+	                                  UObject* Context, FFeedbackContext* Warn) override;
+};
+
+UCLASS()
+class UGameplayInputActionSetFactory : public UFactory
+{
+	GENERATED_BODY()
+
+public:
+	UGameplayInputActionSetFactory();
+
+	virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
+	                                  UObject* Context, FFeedbackContext* Warn) override;
 };
 
 // Asset Type Actions
@@ -37,6 +49,18 @@ public:
 	virtual uint32 GetCategories() override;
 };
 
+/**
+ * 
+ */
+class FGameplayInputActionSetAssetTypeActions : public FAssetTypeActions_Base
+{
+public:
+	virtual UClass* GetSupportedClass() const override;
+	virtual FText GetName() const override;
+	virtual FColor GetTypeColor() const override;
+	virtual uint32 GetCategories() override;
+};
+
 class FGameplayInputSystemEditorModule : public IModuleInterface
 {
 public:
@@ -44,5 +68,6 @@ public:
 	virtual void ShutdownModule() override;
 
 private:
-	TSharedPtr<FGameplayInputDocketAssetTypeActions> GameplayInputScenarioAssetTypeActions;
+	TSharedPtr<FGameplayInputDocketAssetTypeActions> GameplayInputDocketAssetTypeActions;
+	TSharedPtr<FGameplayInputActionSetAssetTypeActions> GameplayInputActionSetAssetTypeActions;
 };
