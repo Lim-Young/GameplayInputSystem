@@ -6,17 +6,17 @@
 #include "GameplayInputSystemTags.h"
 #include "InputAction/GameplayInputActionSet.h"
 
-void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputSourceTag, const EGameplayInputType InputType)
+void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputSourceTag,
+                                                  const EGameplayInputType InputType)
 {
 	if (!InputSourceTag.MatchesTag(GameplayInput))
 	{
 		return;
 	}
 
+	bool bIsCapturedByArbiter = false;
 	if (GameplayInputArbiters.Num() > 0)
 	{
-		bool bHasValidArbiter = false;
-
 		for (auto& ArbiterPair : GameplayInputArbiters)
 		{
 			if (!ArbiterPair.Value)
@@ -24,21 +24,23 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputSourc
 				continue;
 			}
 
-			bHasValidArbiter |= ArbiterPair.Value->ReceiveGameplayInput(InputSourceTag, InputType);
-		}
-
-		if (bHasValidArbiter)
-		{
-			return;
+			if (ArbiterPair.Value->ShouldMatchInputSourceCommand())
+			{
+				bIsCapturedByArbiter |= ArbiterPair.Value->ReceiveGameplayInputSourceCommand(InputSourceTag, InputType);
+			}
 		}
 	}
 
-	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputSourceCommand(InputSourceTag, InputType));
+	if (!bIsCapturedByArbiter)
+	{
+		BroadcastGameplayInputEvent(InputSourceTag, InputType);
+	}
 
-	BroadcastGameplayInputEvent(InputSourceTag, InputType);
+	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputSourceCommand(InputSourceTag, InputType));
 }
 
-void UGameplayInputSubsystem::CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker)
+void UGameplayInputSubsystem::CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker,
+                                                                    const EArbiterCommandMatchMode MatchMode)
 {
 	if (GameplayInputArbiters.Contains(InGameplayInputDocker))
 	{
@@ -47,7 +49,7 @@ void UGameplayInputSubsystem::CreateAndRegisterGameplayInputArbiter(UGameplayInp
 	}
 
 	UGameplayInputArbiter* NewArbiter = NewObject<UGameplayInputArbiter>(this);
-	NewArbiter->Initialize(InGameplayInputDocker);
+	NewArbiter->Initialize(InGameplayInputDocker, MatchMode);
 	GameplayInputArbiters.Add(InGameplayInputDocker, NewArbiter);
 
 	NewArbiter->Start();
@@ -57,10 +59,23 @@ void UGameplayInputSubsystem::FinishAndUnregisterGameplayInputArbiter(UGameplayI
 {
 	if (GameplayInputArbiters.Contains(InGameplayInputDocker))
 	{
-		UGameplayInputSourceCommandInstance* ResultCommandInstance;
-		if (GameplayInputArbiters[InGameplayInputDocker]->Finish(ResultCommandInstance))
+		UGameplayInputSourceCommandInstance* ResultInputSourceCommandInstance;
+		UGameplayInputActionEventInstance* ResultActionEventInstance;
+		UGameplayInputArbiter* Arbiter = GameplayInputArbiters[InGameplayInputDocker];
+
+		if (Arbiter->Finish(ResultInputSourceCommandInstance, ResultActionEventInstance))
 		{
-			BroadcastGameplayInputEvent(ResultCommandInstance->InputSourceTag, ResultCommandInstance->InputType);
+			if (Arbiter->ShouldMatchInputSourceCommand())
+			{
+				BroadcastGameplayInputEvent(ResultInputSourceCommandInstance->InputSourceTag,
+				                            ResultInputSourceCommandInstance->InputType);
+			}
+
+			if (Arbiter->ShouldMatchInputActionEvent())
+			{
+				BroadcastGameplayInputActionTriggered(ResultActionEventInstance->InputActionTag,
+				                                      ResultActionEventInstance->InputActionState);
+			}
 		}
 
 		GameplayInputArbiters.Remove(InGameplayInputDocker);
@@ -111,6 +126,28 @@ void UGameplayInputSubsystem::RemoveGameplayInputActionSet(UGameplayInputActionS
 void UGameplayInputSubsystem::ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag,
                                                               const EGameplayInputActionState ActionState)
 {
+	if (GameplayInputArbiters.Num() > 0)
+	{
+		bool bIsCapturedByArbiter = false;
+		for (auto& ArbiterPair : GameplayInputArbiters)
+		{
+			if (!ArbiterPair.Value)
+			{
+				continue;
+			}
+
+			if (ArbiterPair.Value->ShouldMatchInputActionEvent())
+			{
+				bIsCapturedByArbiter |= ArbiterPair.Value->ReceiveGameplayInputActionEvent(InputActionTag, ActionState);
+			}
+		}
+
+		if (bIsCapturedByArbiter)
+		{
+			return;
+		}
+	}
+
 	BroadcastGameplayInputActionTriggered(InputActionTag, ActionState);
 }
 

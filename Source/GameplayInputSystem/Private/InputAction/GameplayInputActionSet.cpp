@@ -130,7 +130,8 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 		}
 		else
 		{
-			const TArray<FGameplayInputSourceCommand> CapturedInputCommands = ExecutingTrigger->GetCapturedInputCommands();
+			const TArray<FGameplayInputSourceCommand> CapturedInputCommands = ExecutingTrigger->
+				GetCapturedInputCommands();
 			ExecutingTrigger->SetReleaseInputCommands(true);
 			// Failed, We should re-inject the captured input commands back to the action set for re-processing
 			for (FGameplayInputSourceCommand InputCommand : CapturedInputCommands)

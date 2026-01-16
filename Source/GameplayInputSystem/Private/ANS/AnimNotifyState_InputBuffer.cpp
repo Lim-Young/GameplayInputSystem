@@ -23,7 +23,7 @@ void UAnimNotifyState_InputBuffer::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	UGameplayInputSubsystem* GameplayInputSubsystem = MeshComp->GetWorld()->GetSubsystem<UGameplayInputSubsystem>();
 	check(GameplayInputSubsystem);
 
-	GameplayInputSubsystem->CreateAndRegisterGameplayInputArbiter(GameplayInputDocket);
+	GameplayInputSubsystem->CreateAndRegisterGameplayInputArbiter(GameplayInputDocket, MatchMode);
 }
 
 void UAnimNotifyState_InputBuffer::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,

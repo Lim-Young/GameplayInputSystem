@@ -11,16 +11,8 @@ void UGameplayInputActionTrigger_Chord::OnTriggerBegin_Implementation(
 		OwningInputAction->SetActionState(EGameplayInputActionState::Ongoing, false);
 
 		GetTimerManager().SetTimer(ComboTimeoutHandle, this,
-								   &UGameplayInputActionTrigger_Chord::OnComboTimeout,
-								   ComboTimeout, false);
-	}
-}
-
-void UGameplayInputActionTrigger_Chord::PreTriggerFinished_Implementation(bool bWasSuccessful, bool bCanceled)
-{
-	if (GetTimerManager().IsTimerActive(ComboTimeoutHandle))
-	{
-		GetTimerManager().ClearTimer(ComboTimeoutHandle);
+		                           &UGameplayInputActionTrigger_Chord::OnComboTimeout,
+		                           ComboTimeout, false);
 	}
 }
 
@@ -74,6 +66,14 @@ bool UGameplayInputActionTrigger_Chord::CheckInputCommandCanBeCaptured_Implement
 	}
 
 	return false;
+}
+
+void UGameplayInputActionTrigger_Chord::OnResetTrigger_Implementation()
+{
+	if (GetTimerManager().IsTimerActive(ComboTimeoutHandle))
+	{
+		GetTimerManager().ClearTimer(ComboTimeoutHandle);
+	}
 }
 
 void UGameplayInputActionTrigger_Chord::OnComboTimeout()

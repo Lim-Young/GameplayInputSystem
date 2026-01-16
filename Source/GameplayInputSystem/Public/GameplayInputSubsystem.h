@@ -53,7 +53,7 @@ public:
 	void InjectGameplayInput(const FGameplayTag& InputSourceTag, const EGameplayInputType InputType);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
-	void CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker);
+	void CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker, EArbiterCommandMatchMode MatchMode);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
 	void FinishAndUnregisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker);

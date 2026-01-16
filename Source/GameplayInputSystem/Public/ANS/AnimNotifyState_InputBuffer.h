@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayInputArbiter.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "AnimNotifyState_InputBuffer.generated.h"
 
@@ -19,6 +20,9 @@ class GAMEPLAYINPUTSYSTEM_API UAnimNotifyState_InputBuffer : public UAnimNotifyS
 public:
 	UPROPERTY(EditAnywhere, Category = "Input Buffer")
 	TObjectPtr<UGameplayInputDocket> GameplayInputDocket;
+
+	UPROPERTY(EditAnywhere, Category = "Input Buffer")
+	EArbiterCommandMatchMode MatchMode = EArbiterCommandMatchMode::Both;
 
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration,
 	                         const FAnimNotifyEventReference& EventReference) override;
