@@ -31,6 +31,9 @@ public:
 	bool CaptureInputCommand(const FGameplayInputSourceCommand& InInputCommand);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
+	bool CheckCanBeginTrigger(const FGameplayInputSourceCommand& InInputCommand);
+	
+	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool CheckInputCommandCanBeCaptured(const FGameplayInputSourceCommand& InInputCommand);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
@@ -123,6 +126,7 @@ private:
 public:
 	bool CheckCanActivateAction(const FGameplayInputSourceCommand& InInputCommand);
 	void SetActionState(EGameplayInputActionState NewActionState, bool bBroadcastEvent = true);
+	EGameplayInputActionState GetCurrentActionState() const;
 	void BroadcastActionStateEvent(EGameplayInputActionState ActionState) const;
 	void FinishAction(UGameplayInputActionTrigger* ExecutingTrigger, bool bWasSuccessful, bool bCanceled = false);
 

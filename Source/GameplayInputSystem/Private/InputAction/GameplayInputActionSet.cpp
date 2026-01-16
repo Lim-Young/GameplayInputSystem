@@ -20,7 +20,10 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 
 		if (OwningInputAction->CurrentActionState != EGameplayInputActionState::Started)
 		{
-			BeginTrigger(InInputCommand);
+			if (CheckCanBeginTrigger(InInputCommand))
+			{
+				BeginTrigger(InInputCommand);
+			}
 		}
 
 		// if (ValidateTriggerCanFinish())
@@ -34,6 +37,11 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 
 	CapturedInputCommands.Empty();
 	return false;
+}
+
+bool UGameplayInputActionTrigger::CheckCanBeginTrigger_Implementation(const FGameplayInputSourceCommand& InInputCommand)
+{
+	return true;
 }
 
 void UGameplayInputActionTrigger::OnInputCommandCaptured_Implementation(
@@ -124,6 +132,11 @@ void UGameplayInputAction::SetActionState(const EGameplayInputActionState NewAct
 	{
 		BroadcastActionStateEvent(NewActionState);
 	}
+}
+
+EGameplayInputActionState UGameplayInputAction::GetCurrentActionState() const
+{
+	return CurrentActionState;
 }
 
 void UGameplayInputAction::BroadcastActionStateEvent(const EGameplayInputActionState ActionState) const
