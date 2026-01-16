@@ -159,4 +159,10 @@ public:
 private:
 	void TriggerGameplayInputAction(const FGameplayTag& InputActionTag,
 	                                const EGameplayInputActionState ActionState) const;
+
+#if WITH_EDITOR
+
+public:
+	virtual void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;
+#endif
 };

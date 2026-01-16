@@ -12,7 +12,7 @@ class UGameplayInputActionTrigger_Pressed : public UGameplayInputActionTrigger
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger", meta = (Categories = GameplayInput_Source))
+	UPROPERTY(EditAnywhere, meta = (Categories = "GameplayInput.InputSource"))
 	FGameplayTag InputSourceTag;
 
 	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;

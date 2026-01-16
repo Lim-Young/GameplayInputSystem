@@ -265,3 +265,62 @@ void UGameplayInputActionSet::TriggerGameplayInputAction(const FGameplayTag& Inp
 		OwningSubsystem->ForceTriggerGameplayInputAction(InputActionTag, ActionState);
 	}
 }
+
+#if WITH_EDITOR
+void UGameplayInputActionSet::PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent)
+{
+	//  Auto Create Input Action Instance When Actions Array Add New Element
+	Super::PostEditChangeChainProperty(PropertyChangedEvent);
+
+	if (PropertyChangedEvent.Property && PropertyChangedEvent.Property->GetFName() ==
+		GET_MEMBER_NAME_CHECKED(UGameplayInputActionSet, Actions))
+	{
+		const int32 Index = PropertyChangedEvent.GetArrayIndex(
+			GET_MEMBER_NAME_CHECKED(UGameplayInputActionSet, Actions).ToString());
+		if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd ||
+			PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate)
+		{
+			for (int i = 0; i < Actions.Num(); i++)
+			{
+				if (i != Index && Actions[i] && Actions[i]->InputActionTag == FGameplayTag::EmptyTag)
+				{
+					// No new Actions are allowed.
+					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+						                     "GameplayInputActionSet: New Action cannot have an empty InputActionTag."));
+					Actions.RemoveAt(Index);
+					return;
+				}
+			}
+
+			if (Index >= 0 && Actions.IsValidIndex(Index))
+			{
+				TObjectPtr<UGameplayInputAction>& Action = Actions[Index];
+				if (!Action)
+				{
+					Action = NewObject<UGameplayInputAction>(this);
+				}
+			}
+		}
+
+		if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ValueSet ||
+			PropertyChangedEvent.ChangeType == EPropertyChangeType::ResetToDefault ||
+			PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate)
+		{
+			if (const TObjectPtr<UGameplayInputAction> CurrentAction = Actions[Index])
+			{
+				for (int i = 0; i < Actions.Num(); i++)
+				{
+					if (i != Index && Actions[i] && Actions[i]->InputActionTag == CurrentAction->InputActionTag)
+					{
+						// Duplicate input action tags are not allowed.
+						FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+							                     "GameplayInputActionSet: Duplicate InputActionTag are not allowed."));
+						CurrentAction->InputActionTag = FGameplayTag::EmptyTag;
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+#endif

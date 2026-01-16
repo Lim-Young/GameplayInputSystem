@@ -37,10 +37,10 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputBufferSchema : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput|InputSource", meta = (ForceInlineRow))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput")
 	TMap<FGameplayInputSourceCommand, FGameplayInputSourceCommandConfig> InputSources;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput|InputAction")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput")
 	TMap<FGameplayInputActionEvent, FGameplayInputActionEventConfig> InputActions;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput")

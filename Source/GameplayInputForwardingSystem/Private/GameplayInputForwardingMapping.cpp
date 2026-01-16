@@ -61,7 +61,8 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 {
 	Super::PostEditChangeChainProperty(PropertyChangedEvent);
 
-	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd)
+	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd ||
+		PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate)
 	{
 		int32 Index;
 
@@ -107,44 +108,49 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 	}
 
 	// Check ForwardingConfigs InputTag uniqueness
-	if (PropertyChangedEvent.Property &&
-		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
-			FGameplayInputSourceForwardingConfigContainer, InputSourceTag))
+	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ValueSet ||
+		PropertyChangedEvent.ChangeType == EPropertyChangeType::ResetToDefault ||
+		PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate)
 	{
-		int index = PropertyChangedEvent.GetArrayIndex(
-			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputSourceForwardingConfigs).ToString());
-		if (index >= 0)
+		if (PropertyChangedEvent.Property &&
+			PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
+				FGameplayInputSourceForwardingConfigContainer, InputSourceTag))
 		{
-			FGameplayTag ChangedTag = InputSourceForwardingConfigs[index].InputSourceTag;
-			for (int i = 0; i < InputSourceForwardingConfigs.Num(); i++)
+			int index = PropertyChangedEvent.GetArrayIndex(
+				GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputSourceForwardingConfigs).ToString());
+			if (index >= 0)
 			{
-				if (i != index && InputSourceForwardingConfigs[i].InputSourceTag == ChangedTag)
+				FGameplayTag ChangedTag = InputSourceForwardingConfigs[index].InputSourceTag;
+				for (int i = 0; i < InputSourceForwardingConfigs.Num(); i++)
 				{
-					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
-						                     "GameplayInputForwardingMapping: Duplicate InputSourceTag is not allowed."));
-					InputSourceForwardingConfigs[index].InputSourceTag = FGameplayTag();
-					break;
+					if (i != index && InputSourceForwardingConfigs[i].InputSourceTag == ChangedTag)
+					{
+						FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+							                     "GameplayInputForwardingMapping: Duplicate InputSourceTag is not allowed."));
+						InputSourceForwardingConfigs[index].InputSourceTag = FGameplayTag();
+						break;
+					}
 				}
 			}
 		}
-	}
-	else if (PropertyChangedEvent.Property &&
-		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
-			FGameplayInputActionForwardingConfigContainer, InputActionTag))
-	{
-		int index = PropertyChangedEvent.GetArrayIndex(
-			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputActionForwardingConfigs).ToString());
-		if (index >= 0)
+		else if (PropertyChangedEvent.Property &&
+			PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
+				FGameplayInputActionForwardingConfigContainer, InputActionTag))
 		{
-			FGameplayTag ChangedTag = InputActionForwardingConfigs[index].InputActionTag;
-			for (int i = 0; i < InputActionForwardingConfigs.Num(); i++)
+			int index = PropertyChangedEvent.GetArrayIndex(
+				GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputActionForwardingConfigs).ToString());
+			if (index >= 0)
 			{
-				if (i != index && InputActionForwardingConfigs[i].InputActionTag == ChangedTag)
+				FGameplayTag ChangedTag = InputActionForwardingConfigs[index].InputActionTag;
+				for (int i = 0; i < InputActionForwardingConfigs.Num(); i++)
 				{
-					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
-						                     "GameplayInputForwardingMapping: Duplicate InputActionTag is not allowed."));
-					InputActionForwardingConfigs[index].InputActionTag = FGameplayTag();
-					break;
+					if (i != index && InputActionForwardingConfigs[i].InputActionTag == ChangedTag)
+					{
+						FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+							                     "GameplayInputForwardingMapping: Duplicate InputActionTag is not allowed."));
+						InputActionForwardingConfigs[index].InputActionTag = FGameplayTag();
+						break;
+					}
 				}
 			}
 		}

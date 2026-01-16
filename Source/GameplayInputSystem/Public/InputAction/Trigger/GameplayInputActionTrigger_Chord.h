@@ -12,14 +12,13 @@ class UGameplayInputActionTrigger_Chord : public UGameplayInputActionTrigger
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger")
+	UPROPERTY(EditAnywhere)
 	TArray<FGameplayInputSourceCommand> ComboCommands;
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger")
+	UPROPERTY(EditAnywhere)
 	bool bInOrder = true;
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action Trigger",
-		meta=(EditAsFrames, ClampMin="0", UIMin="0", UIMax="2"))
+	UPROPERTY(EditAnywhere, meta=(EditAsFrames, ClampMin="0", UIMin="0", UIMax="2"))
 	float ComboTimeout = 0.066667f;
 
 protected:
@@ -27,7 +26,8 @@ protected:
 
 	virtual void OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual bool ValidateTriggerCanFinish_Implementation() override;
-	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
+	virtual bool
+	CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual void OnResetTrigger_Implementation() override;
 
 	void OnComboTimeout();
