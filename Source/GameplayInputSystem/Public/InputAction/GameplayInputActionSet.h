@@ -152,7 +152,9 @@ private:
 	TObjectPtr<UGameplayInputSubsystem> OwningSubsystem = nullptr;
 
 public:
-	bool HandleInput(const FGameplayInputSourceCommand& InInputCommand);
+	bool HandleInput(const FGameplayInputSourceCommand& InInputCommand,
+	                 bool bClampedByHigherPriority = false,
+	                 uint8 CustomPriority = -1);
 
 private:
 	void TriggerGameplayInputAction(const FGameplayTag& InputActionTag,

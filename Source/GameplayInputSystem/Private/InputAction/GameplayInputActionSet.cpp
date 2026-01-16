@@ -136,7 +136,8 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 			// Failed, We should re-inject the captured input commands back to the action set for re-processing
 			for (FGameplayInputSourceCommand InputCommand : CapturedInputCommands)
 			{
-				OwningActionSet->HandleInput(InputCommand);
+				// Pass down to prevent higher-priority Action Sets from capturing again, which could cause an infinite loop.
+				OwningActionSet->HandleInput(InputCommand, true, Priority);
 			}
 			ExecutingTrigger->SetReleaseInputCommands(false);
 		}
@@ -216,7 +217,9 @@ UGameplayInputActionSet* UGameplayInputActionSet::CreateByTemplateObject(const U
 	return InputActionSetInstance;
 }
 
-bool UGameplayInputActionSet::HandleInput(const FGameplayInputSourceCommand& InInputCommand)
+bool UGameplayInputActionSet::HandleInput(const FGameplayInputSourceCommand& InInputCommand,
+                                          const bool bClampedByHigherPriority,
+                                          const uint8 CustomPriority)
 {
 	TArray<UGameplayInputAction*> MaxPriorityActions;
 	uint8 MaxPriority = 0;
@@ -224,6 +227,11 @@ bool UGameplayInputActionSet::HandleInput(const FGameplayInputSourceCommand& InI
 	{
 		if (InputAction && InputAction->CheckCanActivateAction(InInputCommand))
 		{
+			if (bClampedByHigherPriority && InputAction->Priority >= CustomPriority)
+			{
+				continue;
+			}
+
 			if (InputAction->Priority > MaxPriority)
 			{
 				MaxPriority = InputAction->Priority;
