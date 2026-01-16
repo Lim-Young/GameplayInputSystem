@@ -63,14 +63,16 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 
 	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd)
 	{
-		const int32 Index = PropertyChangedEvent.GetArrayIndex(
-			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputSourceForwardingConfigs).ToString());
+		int32 Index;
 
 		// If Input Source Array
 		if (PropertyChangedEvent.Property &&
 			PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
 				UGameplayInputForwardingMapping, InputSourceForwardingConfigs))
 		{
+			Index = PropertyChangedEvent.GetArrayIndex(
+				GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputSourceForwardingConfigs).ToString());
+
 			// if array already has empty tag, do not add new one
 			for (int i = 0; i < InputSourceForwardingConfigs.Num(); i++)
 			{
@@ -87,6 +89,9 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 			PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
 				UGameplayInputForwardingMapping, InputActionForwardingConfigs))
 		{
+			Index = PropertyChangedEvent.GetArrayIndex(
+				GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputActionForwardingConfigs).ToString());
+
 			// if array already has empty tag, do not add new one
 			for (int i = 0; i < InputActionForwardingConfigs.Num(); i++)
 			{
@@ -116,7 +121,7 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 				if (i != index && InputSourceForwardingConfigs[i].InputSourceTag == ChangedTag)
 				{
 					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
-						                     "GameplayInputForwardingMapping: Duplicate InputTag is not allowed."));
+						                     "GameplayInputForwardingMapping: Duplicate InputSourceTag is not allowed."));
 					InputSourceForwardingConfigs[index].InputSourceTag = FGameplayTag();
 					break;
 				}
@@ -137,7 +142,7 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 				if (i != index && InputActionForwardingConfigs[i].InputActionTag == ChangedTag)
 				{
 					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
-						                     "GameplayInputForwardingMapping: Duplicate InputTag is not allowed."));
+						                     "GameplayInputForwardingMapping: Duplicate InputActionTag is not allowed."));
 					InputActionForwardingConfigs[index].InputActionTag = FGameplayTag();
 					break;
 				}

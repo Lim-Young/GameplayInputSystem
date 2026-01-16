@@ -37,8 +37,7 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputDocket : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput|InputSource",
-		meta = (TitleProperty = "{InputSourceTag}[{InputType}]"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput|InputSource", meta = (ForceInlineRow))
 	TMap<FGameplayInputSourceCommand, FGameplayInputSourceCommandConfig> InputSources;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayInput|InputAction")

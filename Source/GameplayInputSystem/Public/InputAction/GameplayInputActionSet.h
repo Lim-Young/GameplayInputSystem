@@ -137,7 +137,7 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputActionSet : public UObject
 
 public:
 	UPROPERTY(EditAnywhere, Instanced, Category = "Gameplay Input Action Set",
-		meta = (TitleProperty = "{ActionTag} [{Priority}]"))
+		meta = (TitleProperty = "{InputActionTag} [P {Priority}]"))
 	TArray<TObjectPtr<UGameplayInputAction>> Actions;
 
 	uint8 Priority = 0;

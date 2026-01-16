@@ -25,7 +25,7 @@ struct FGameplayInputSourceForwardingConfigContainer
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = GameplayInput))
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = "GameplayInput.InputSource"))
 	FGameplayTag InputSourceTag;
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
@@ -49,7 +49,7 @@ struct FGameplayInputActionForwardingConfigContainer
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = GameplayInput))
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = "GameplayInput.InputAction"))
 	FGameplayTag InputActionTag;
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
