@@ -27,7 +27,11 @@ public:
 
 protected:
 	UFUNCTION()
-	void HandleGameplayInputEvent(const FGameplayTag& InputTag, const EGameplayInputType InputType);
+	void HandleGameplayInputSourceEvent(const FGameplayTag& InputTag, const EGameplayInputType InputType);
+
+	UFUNCTION()
+	void HandleGameplayInputActionEvent(const FGameplayTag& InputActionTag,
+	                                    const EGameplayInputActionState ActionState);
 
 private:
 	UPROPERTY()
@@ -35,7 +39,7 @@ private:
 
 	UPROPERTY()
 	TArray<UGameplayInputForwardingMapping*> GameplayInputForwardingMappings;
-	
+
 	UPROPERTY()
 	TObjectPtr<AActor> CachedLocalPlayerPawn;
 

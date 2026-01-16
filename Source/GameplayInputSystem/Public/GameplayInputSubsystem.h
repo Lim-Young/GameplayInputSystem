@@ -26,7 +26,7 @@ public:
 	}
 
 private:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputEvent, const FGameplayTag&, InputSourceTag,
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputSourceEvent, const FGameplayTag&, InputSourceTag,
 	                                             const EGameplayInputType, InputType);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputActionTriggered, const FGameplayTag&, InputActionTag,
@@ -34,7 +34,7 @@ private:
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Input System|Events")
-	FOnGameplayInputEvent OnGameplayInputEvent;
+	FOnGameplayInputSourceEvent OnGameplayInputSourceEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Input System|Events")
 	FOnGameplayInputActionTriggered OnGameplayInputActionTriggered;
@@ -53,7 +53,8 @@ public:
 	void InjectGameplayInput(const FGameplayTag& InputSourceTag, const EGameplayInputType InputType);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
-	void CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker, EArbiterCommandMatchMode MatchMode);
+	void CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker,
+	                                           EArbiterCommandMatchMode MatchMode);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
 	void FinishAndUnregisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker);

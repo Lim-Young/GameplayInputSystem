@@ -32,7 +32,7 @@ void UGameplayInteractionProcessor::Initialize(UGameplayInteractionInstance* Int
 	GameplayInputSubsystem = GetWorld()->GetSubsystem<UGameplayInputSubsystem>();
 	OwnerInteractionInstance = InteractionInstance;
 
-	GameplayInputSubsystem->OnGameplayInputEvent.AddDynamic(
+	GameplayInputSubsystem->OnGameplayInputSourceEvent.AddDynamic(
 		this, &UGameplayInteractionProcessor::ProcessGameplayInputEvent);
 
 	PostInitialize();
@@ -44,7 +44,7 @@ void UGameplayInteractionProcessor::Cleanup()
 
 	if (IsValid(GameplayInputSubsystem))
 	{
-		GameplayInputSubsystem->OnGameplayInputEvent.RemoveDynamic(
+		GameplayInputSubsystem->OnGameplayInputSourceEvent.RemoveDynamic(
 			this, &UGameplayInteractionProcessor::ProcessGameplayInputEvent);
 	}
 }

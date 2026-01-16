@@ -3,8 +3,8 @@
 
 #include "GameplayInputForwardingMapping.h"
 
-bool FGameplayInputForwardingConfig::TryGetForwardingTag(const EGameplayInputType InInputType,
-                                                         FGameplayTag& OutForwardingTag) const
+bool FGameplayInputSourceForwardingConfig::TryGetForwardingTag(const EGameplayInputType InInputType,
+                                                               FGameplayTag& OutForwardingTag) const
 {
 	if (InputTypeToForwardingTagMap.Contains(InInputType))
 	{
@@ -15,13 +15,37 @@ bool FGameplayInputForwardingConfig::TryGetForwardingTag(const EGameplayInputTyp
 	return false;
 }
 
-bool UGameplayInputForwardingMapping::TryGetInputForwardingTag(const FGameplayTag& InInputTag,
-                                                               const EGameplayInputType InInputType,
+bool FGameplayInputActionForwardingConfig::TryGetForwardingTag(const EGameplayInputActionState InActionState,
                                                                FGameplayTag& OutForwardingTag) const
 {
-	if (ForwardingMap.Contains(InInputTag))
+	if (ActionStateToForwardingTagMap.Contains(InActionState))
 	{
-		return ForwardingMap[InInputTag].TryGetForwardingTag(InInputType, OutForwardingTag);
+		OutForwardingTag = ActionStateToForwardingTagMap[InActionState];
+		return true;
+	}
+
+	return false;
+}
+
+bool UGameplayInputForwardingMapping::TryGetInputSourceForwardingTag(const FGameplayTag& InInputTag,
+                                                                     const EGameplayInputType InInputType,
+                                                                     FGameplayTag& OutForwardingTag) const
+{
+	if (InputSourceForwardingMap.Contains(InInputTag))
+	{
+		return InputSourceForwardingMap[InInputTag].TryGetForwardingTag(InInputType, OutForwardingTag);
+	}
+
+	return false;
+}
+
+bool UGameplayInputForwardingMapping::TryGetInputActionForwardingTag(const FGameplayTag& InInputTag,
+                                                                     const EGameplayInputActionState InActionState,
+                                                                     FGameplayTag& OutForwardingTag) const
+{
+	if (InputActionForwardingMap.Contains(InInputTag))
+	{
+		return InputActionForwardingMap[InInputTag].TryGetForwardingTag(InActionState, OutForwardingTag);
 	}
 
 	return false;
@@ -40,17 +64,39 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd)
 	{
 		const int32 Index = PropertyChangedEvent.GetArrayIndex(
-			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, ForwardingConfigs).ToString());
+			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputSourceForwardingConfigs).ToString());
 
-		// if array already has empty tag, do not add new one
-		for (int i = 0; i < ForwardingConfigs.Num(); i++)
+		// If Input Source Array
+		if (PropertyChangedEvent.Property &&
+			PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
+				UGameplayInputForwardingMapping, InputSourceForwardingConfigs))
 		{
-			if (i != Index && !ForwardingConfigs[i].InputTag.IsValid())
+			// if array already has empty tag, do not add new one
+			for (int i = 0; i < InputSourceForwardingConfigs.Num(); i++)
 			{
-				ForwardingConfigs.RemoveAt(Index);
-				FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
-					                     "GameplayInputForwardingMapping: Cannot add new entry when there is an empty InputTag."));
-				return;
+				if (i != Index && !InputSourceForwardingConfigs[i].InputSourceTag.IsValid())
+				{
+					InputSourceForwardingConfigs.RemoveAt(Index);
+					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+						                     "GameplayInputForwardingMapping: Cannot add new entry when there is an empty InputTag."));
+					return;
+				}
+			}
+		}
+		else if (PropertyChangedEvent.Property &&
+			PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
+				UGameplayInputForwardingMapping, InputActionForwardingConfigs))
+		{
+			// if array already has empty tag, do not add new one
+			for (int i = 0; i < InputActionForwardingConfigs.Num(); i++)
+			{
+				if (i != Index && !InputActionForwardingConfigs[i].InputActionTag.IsValid())
+				{
+					InputActionForwardingConfigs.RemoveAt(Index);
+					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+						                     "GameplayInputForwardingMapping: Cannot add new entry when there is an empty InputTag."));
+					return;
+				}
 			}
 		}
 	}
@@ -58,36 +104,68 @@ void UGameplayInputForwardingMapping::PostEditChangeChainProperty(FPropertyChang
 	// Check ForwardingConfigs InputTag uniqueness
 	if (PropertyChangedEvent.Property &&
 		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
-			FGameplayInputForwardingConfigContainer, InputTag))
+			FGameplayInputSourceForwardingConfigContainer, InputSourceTag))
 	{
 		int index = PropertyChangedEvent.GetArrayIndex(
-			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, ForwardingConfigs).ToString());
+			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputSourceForwardingConfigs).ToString());
 		if (index >= 0)
 		{
-			FGameplayTag ChangedTag = ForwardingConfigs[index].InputTag;
-			for (int i = 0; i < ForwardingConfigs.Num(); i++)
+			FGameplayTag ChangedTag = InputSourceForwardingConfigs[index].InputSourceTag;
+			for (int i = 0; i < InputSourceForwardingConfigs.Num(); i++)
 			{
-				if (i != index && ForwardingConfigs[i].InputTag == ChangedTag)
+				if (i != index && InputSourceForwardingConfigs[i].InputSourceTag == ChangedTag)
 				{
 					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
 						                     "GameplayInputForwardingMapping: Duplicate InputTag is not allowed."));
-					ForwardingConfigs[index].InputTag = FGameplayTag();
+					InputSourceForwardingConfigs[index].InputSourceTag = FGameplayTag();
+					break;
+				}
+			}
+		}
+	}
+	else if (PropertyChangedEvent.Property &&
+		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(
+			FGameplayInputActionForwardingConfigContainer, InputActionTag))
+	{
+		int index = PropertyChangedEvent.GetArrayIndex(
+			GET_MEMBER_NAME_CHECKED(UGameplayInputForwardingMapping, InputActionForwardingConfigs).ToString());
+		if (index >= 0)
+		{
+			FGameplayTag ChangedTag = InputActionForwardingConfigs[index].InputActionTag;
+			for (int i = 0; i < InputActionForwardingConfigs.Num(); i++)
+			{
+				if (i != index && InputActionForwardingConfigs[i].InputActionTag == ChangedTag)
+				{
+					FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(
+						                     "GameplayInputForwardingMapping: Duplicate InputTag is not allowed."));
+					InputActionForwardingConfigs[index].InputActionTag = FGameplayTag();
 					break;
 				}
 			}
 		}
 	}
 
-	// Rebuild ForwardingMap
-	ForwardingMap.Empty();
-	for (const FGameplayInputForwardingConfigContainer& ConfigContainer : ForwardingConfigs)
+	// Rebuild Maps
+	InputSourceForwardingMap.Empty();
+	for (const FGameplayInputSourceForwardingConfigContainer& ConfigContainer : InputSourceForwardingConfigs)
 	{
-		if (!ConfigContainer.InputTag.IsValid())
+		if (!ConfigContainer.InputSourceTag.IsValid())
 		{
 			continue;
 		}
 
-		ForwardingMap.Add(ConfigContainer.InputTag, ConfigContainer.ForwardingConfig);
+		InputSourceForwardingMap.Add(ConfigContainer.InputSourceTag, ConfigContainer.ForwardingConfig);
+	}
+
+	InputActionForwardingMap.Empty();
+	for (const FGameplayInputActionForwardingConfigContainer& ConfigContainer : InputActionForwardingConfigs)
+	{
+		if (!ConfigContainer.InputActionTag.IsValid())
+		{
+			continue;
+		}
+
+		InputActionForwardingMap.Add(ConfigContainer.InputActionTag, ConfigContainer.ForwardingConfig);
 	}
 }
 #endif

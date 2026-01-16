@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputSourceCommand.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "UObject/Object.h"
 #include "GameplayInputForwardingMapping.generated.h"
 
+// Input Source Command
 USTRUCT(BlueprintType)
-struct FGameplayInputForwardingConfig
+struct FGameplayInputSourceForwardingConfig
 {
 	GENERATED_BODY()
 
@@ -21,15 +21,39 @@ struct FGameplayInputForwardingConfig
 };
 
 USTRUCT(BlueprintType)
-struct FGameplayInputForwardingConfigContainer
+struct FGameplayInputSourceForwardingConfigContainer
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = GameplayInput))
-	FGameplayTag InputTag;
+	FGameplayTag InputSourceTag;
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
-	FGameplayInputForwardingConfig ForwardingConfig;
+	FGameplayInputSourceForwardingConfig ForwardingConfig;
+};
+
+// Input Action Event
+USTRUCT(BlueprintType)
+struct FGameplayInputActionForwardingConfig
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
+	TMap<EGameplayInputActionState, FGameplayTag> ActionStateToForwardingTagMap;
+
+	bool TryGetForwardingTag(const EGameplayInputActionState InActionState, FGameplayTag& OutForwardingTag) const;
+};
+
+USTRUCT(BlueprintType)
+struct FGameplayInputActionForwardingConfigContainer
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding", meta = (Categories = GameplayInput))
+	FGameplayTag InputActionTag;
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
+	FGameplayInputActionForwardingConfig ForwardingConfig;
 };
 
 /**
@@ -40,19 +64,29 @@ class GAMEPLAYINPUTFORWARDINGSYSTEM_API UGameplayInputForwardingMapping : public
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding",
-		meta = (TitleProperty = "{InputTag}"))
-	TArray<FGameplayInputForwardingConfigContainer> ForwardingConfigs;
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding|Input Source",
+		meta = (TitleProperty = "{InputSourceTag}"))
+	TArray<FGameplayInputSourceForwardingConfigContainer> InputSourceForwardingConfigs;
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding|Input Action",
+		meta = (TitleProperty = "{InputActionTag}"))
+	TArray<FGameplayInputActionForwardingConfigContainer> InputActionForwardingConfigs;
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
 	uint8 Priority = 0;
 
 	UPROPERTY(VisibleAnywhere, Category = "Debug")
-	TMap<FGameplayTag, FGameplayInputForwardingConfig> ForwardingMap;
+	TMap<FGameplayTag, FGameplayInputSourceForwardingConfig> InputSourceForwardingMap;
+
+	UPROPERTY(VisibleAnywhere, Category = "Debug")
+	TMap<FGameplayTag, FGameplayInputActionForwardingConfig> InputActionForwardingMap;
 
 public:
-	bool TryGetInputForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
-	                              FGameplayTag& OutForwardingTag) const;
+	bool TryGetInputSourceForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
+	                                    FGameplayTag& OutForwardingTag) const;
+
+	bool TryGetInputActionForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputActionState InActionState,
+	                                    FGameplayTag& OutForwardingTag) const;
 
 	uint8 GetPriority() const;
 

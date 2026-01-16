@@ -154,7 +154,7 @@ void UGameplayInputSubsystem::ForceTriggerGameplayInputAction(const FGameplayTag
 void UGameplayInputSubsystem::BroadcastGameplayInputEvent(const FGameplayTag& InputSourceTag,
                                                           const EGameplayInputType InputType) const
 {
-	OnGameplayInputEvent.Broadcast(InputSourceTag, InputType);
+	OnGameplayInputSourceEvent.Broadcast(InputSourceTag, InputType);
 }
 
 void UGameplayInputSubsystem::BroadcastGameplayInputActionTriggered(const FGameplayTag& InputActionTag,

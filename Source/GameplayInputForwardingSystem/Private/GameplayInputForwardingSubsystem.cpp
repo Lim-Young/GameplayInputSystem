@@ -21,12 +21,14 @@ void UGameplayInputForwardingSubsystem::PostInitialize()
 	GameplayInputSubsystem = GetWorld()->GetSubsystem<UGameplayInputSubsystem>();
 	check(GameplayInputSubsystem);
 
-	GameplayInputSubsystem->OnGameplayInputEvent.AddDynamic(
-		this, &UGameplayInputForwardingSubsystem::HandleGameplayInputEvent);
+	GameplayInputSubsystem->OnGameplayInputSourceEvent.AddDynamic(
+		this, &UGameplayInputForwardingSubsystem::HandleGameplayInputSourceEvent);
+	GameplayInputSubsystem->OnGameplayInputActionTriggered.AddDynamic(
+		this, &UGameplayInputForwardingSubsystem::HandleGameplayInputActionEvent);
 }
 
-void UGameplayInputForwardingSubsystem::HandleGameplayInputEvent(const FGameplayTag& InputTag,
-                                                                 const EGameplayInputType InputType)
+void UGameplayInputForwardingSubsystem::HandleGameplayInputSourceEvent(const FGameplayTag& InputTag,
+                                                                       const EGameplayInputType InputType)
 {
 	UGameplayInputForwardingMapping* Mapping = nullptr;
 	if (!TryGetInputForwardingMapping(Mapping))
@@ -35,11 +37,37 @@ void UGameplayInputForwardingSubsystem::HandleGameplayInputEvent(const FGameplay
 	}
 
 	FGameplayTag InputForwardingTag;
-	if (Mapping->TryGetInputForwardingTag(InputTag, InputType, InputForwardingTag))
+	if (Mapping->TryGetInputSourceForwardingTag(InputTag, InputType, InputForwardingTag))
 	{
 		if (!IsValid(CachedLocalPlayerPawn))
 		{
-			ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+			if (LocalPlayer && LocalPlayer->PlayerController)
+			{
+				CachedLocalPlayerPawn = LocalPlayer->PlayerController->GetPawn();
+			}
+		}
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(CachedLocalPlayerPawn, InputForwardingTag,
+		                                                         FGameplayEventData());
+	}
+}
+
+void UGameplayInputForwardingSubsystem::HandleGameplayInputActionEvent(const FGameplayTag& InputActionTag,
+                                                                       const EGameplayInputActionState ActionState)
+{
+	UGameplayInputForwardingMapping* Mapping = nullptr;
+	if (!TryGetInputForwardingMapping(Mapping))
+	{
+		return;
+	}
+
+	FGameplayTag InputForwardingTag;
+	if (Mapping->TryGetInputActionForwardingTag(InputActionTag, ActionState, InputForwardingTag))
+	{
+		if (!IsValid(CachedLocalPlayerPawn))
+		{
+			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 			if (LocalPlayer && LocalPlayer->PlayerController)
 			{
 				CachedLocalPlayerPawn = LocalPlayer->PlayerController->GetPawn();
