@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayInputArbiter.h"
+#include "GameplayInputBuffer.h"
 #include "GameplayInputSystemEnums.h"
 #include "GameplayTagContainer.h"
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -41,7 +41,7 @@ public:
 
 private:
 	UPROPERTY()
-	TMap<TObjectPtr<UGameplayInputDocket>, TObjectPtr<UGameplayInputArbiter>> GameplayInputArbiters;
+	TMap<TObjectPtr<UGameplayInputBufferSchema>, TObjectPtr<UGameplayInputBuffer>> GameplayInputBuffers;
 
 	UPROPERTY()
 	TArray<TObjectPtr<UGameplayInputActionSet>> ActiveGameplayInputActionSets;
@@ -53,11 +53,11 @@ public:
 	void InjectGameplayInput(const FGameplayTag& InputSourceTag, const EGameplayInputType InputType);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
-	void CreateAndRegisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker,
-	                                           EArbiterCommandMatchMode MatchMode);
+	void CreateAndRegisterGameplayInputBuffer(UGameplayInputBufferSchema* InGameplayInputDocker,
+	                                          EGameplayInputBufferScope InputBufferScope);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
-	void FinishAndUnregisterGameplayInputArbiter(UGameplayInputDocket* InGameplayInputDocker);
+	void FinishAndUnregisterGameplayInputBuffer(UGameplayInputBufferSchema* InGameplayInputDocker);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
 	void AddGameplayInputActionSet(UGameplayInputActionSet* InInputActionSet, uint8 Priority = 0);
@@ -66,9 +66,7 @@ public:
 	void RemoveGameplayInputActionSet(UGameplayInputActionSet* InInputActionSet);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
-	void ForceTriggerGameplayInputAction(
-		const FGameplayTag& InputActionTag,
-		EGameplayInputActionState ActionState);
+	void ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag, EGameplayInputActionState ActionState);
 
 private:
 	void BroadcastGameplayInputEvent(const FGameplayTag& InputSourceTag, EGameplayInputType InputType) const;

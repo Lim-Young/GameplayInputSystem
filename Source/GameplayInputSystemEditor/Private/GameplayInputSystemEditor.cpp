@@ -2,22 +2,23 @@
 
 #include "FrameCountCustomization.h"
 #include "InputAction/GameplayInputActionSet.h"
-#include "GameplayInputArbiter.h"
+#include "GameplayInputBuffer.h"
 
 #define LOCTEXT_NAMESPACE "FGameplayInputSystemEditorModule"
 
 // Factory
 
-UGameplayInputDocketFactory::UGameplayInputDocketFactory()
+UGameplayInputBufferSchemaFactory::UGameplayInputBufferSchemaFactory()
 {
-	SupportedClass = UGameplayInputDocket::StaticClass();
+	SupportedClass = UGameplayInputBufferSchema::StaticClass();
 	bCreateNew = true;
 }
 
-UObject* UGameplayInputDocketFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName,
-                                                       EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)
+UObject* UGameplayInputBufferSchemaFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName,
+                                                             EObjectFlags Flags, UObject* Context,
+                                                             FFeedbackContext* Warn)
 {
-	return NewObject<UGameplayInputDocket>(InParent, InClass, InName, Flags, Context);
+	return NewObject<UGameplayInputBufferSchema>(InParent, InClass, InName, Flags, Context);
 }
 
 UGameplayInputActionSetFactory::UGameplayInputActionSetFactory()
@@ -35,22 +36,22 @@ UObject* UGameplayInputActionSetFactory::FactoryCreateNew(UClass* InClass, UObje
 
 // Asset Type Actions
 
-UClass* FGameplayInputDocketAssetTypeActions::GetSupportedClass() const
+UClass* FGameplayInputBufferSchemaAssetTypeActions::GetSupportedClass() const
 {
-	return UGameplayInputDocket::StaticClass();
+	return UGameplayInputBufferSchema::StaticClass();
 }
 
-FText FGameplayInputDocketAssetTypeActions::GetName() const
+FText FGameplayInputBufferSchemaAssetTypeActions::GetName() const
 {
-	return INVTEXT("Gameplay Input Docket");
+	return INVTEXT("Gameplay Input Buffer Schema");
 }
 
-FColor FGameplayInputDocketAssetTypeActions::GetTypeColor() const
+FColor FGameplayInputBufferSchemaAssetTypeActions::GetTypeColor() const
 {
 	return FColor(26, 96, 160);
 }
 
-uint32 FGameplayInputDocketAssetTypeActions::GetCategories()
+uint32 FGameplayInputBufferSchemaAssetTypeActions::GetCategories()
 {
 	return FAssetToolsModule::GetModule().Get().RegisterAdvancedAssetCategory(
 		FName(TEXT("Input")), INVTEXT("Input"));
@@ -80,11 +81,11 @@ uint32 FGameplayInputActionSetAssetTypeActions::GetCategories()
 
 void FGameplayInputSystemEditorModule::StartupModule()
 {
-	GameplayInputDocketAssetTypeActions = MakeShared<FGameplayInputDocketAssetTypeActions>();
+	GameplayInputBufferSchemaAssetTypeActions = MakeShared<FGameplayInputBufferSchemaAssetTypeActions>();
 	GameplayInputActionSetAssetTypeActions = MakeShared<FGameplayInputActionSetAssetTypeActions>();
 
 	FAssetToolsModule::GetModule().Get().RegisterAssetTypeActions(
-		GameplayInputDocketAssetTypeActions.ToSharedRef());
+		GameplayInputBufferSchemaAssetTypeActions.ToSharedRef());
 	FAssetToolsModule::GetModule().Get().RegisterAssetTypeActions(
 		GameplayInputActionSetAssetTypeActions.ToSharedRef());
 
@@ -104,7 +105,7 @@ void FGameplayInputSystemEditorModule::ShutdownModule()
 	if (FModuleManager::Get().IsModuleLoaded("AssetTools"))
 	{
 		FAssetToolsModule::GetModule().Get().UnregisterAssetTypeActions(
-			GameplayInputDocketAssetTypeActions.ToSharedRef());
+			GameplayInputBufferSchemaAssetTypeActions.ToSharedRef());
 		FAssetToolsModule::GetModule().Get().UnregisterAssetTypeActions(
 			GameplayInputActionSetAssetTypeActions.ToSharedRef());
 	}

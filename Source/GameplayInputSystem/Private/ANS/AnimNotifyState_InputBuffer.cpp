@@ -10,7 +10,7 @@ void UAnimNotifyState_InputBuffer::NotifyBegin(USkeletalMeshComponent* MeshComp,
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-	if (!IsValid(GameplayInputDocket))
+	if (!IsValid(InputBufferSchema))
 	{
 		return;
 	}
@@ -23,7 +23,7 @@ void UAnimNotifyState_InputBuffer::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	UGameplayInputSubsystem* GameplayInputSubsystem = MeshComp->GetWorld()->GetSubsystem<UGameplayInputSubsystem>();
 	check(GameplayInputSubsystem);
 
-	GameplayInputSubsystem->CreateAndRegisterGameplayInputArbiter(GameplayInputDocket, MatchMode);
+	GameplayInputSubsystem->CreateAndRegisterGameplayInputBuffer(InputBufferSchema, BufferScope);
 }
 
 void UAnimNotifyState_InputBuffer::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
@@ -31,7 +31,7 @@ void UAnimNotifyState_InputBuffer::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	if (!IsValid(GameplayInputDocket))
+	if (!IsValid(InputBufferSchema))
 	{
 		return;
 	}
@@ -44,5 +44,5 @@ void UAnimNotifyState_InputBuffer::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 	UGameplayInputSubsystem* GameplayInputSubsystem = MeshComp->GetWorld()->GetSubsystem<UGameplayInputSubsystem>();
 	check(GameplayInputSubsystem);
 
-	GameplayInputSubsystem->FinishAndUnregisterGameplayInputArbiter(GameplayInputDocket);
+	GameplayInputSubsystem->FinishAndUnregisterGameplayInputBuffer(InputBufferSchema);
 }

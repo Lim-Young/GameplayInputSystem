@@ -12,12 +12,12 @@
  * 
  */
 UCLASS()
-class UGameplayInputDocketFactory : public UFactory
+class UGameplayInputBufferSchemaFactory : public UFactory
 {
 	GENERATED_BODY()
 
 public:
-	UGameplayInputDocketFactory();
+	UGameplayInputBufferSchemaFactory();
 
 	virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
 	                                  UObject* Context, FFeedbackContext* Warn) override;
@@ -40,7 +40,7 @@ public:
 /**
  * 
  */
-class FGameplayInputDocketAssetTypeActions : public FAssetTypeActions_Base
+class FGameplayInputBufferSchemaAssetTypeActions : public FAssetTypeActions_Base
 {
 public:
 	virtual UClass* GetSupportedClass() const override;
@@ -68,6 +68,6 @@ public:
 	virtual void ShutdownModule() override;
 
 private:
-	TSharedPtr<FGameplayInputDocketAssetTypeActions> GameplayInputDocketAssetTypeActions;
+	TSharedPtr<FGameplayInputBufferSchemaAssetTypeActions> GameplayInputBufferSchemaAssetTypeActions;
 	TSharedPtr<FGameplayInputActionSetAssetTypeActions> GameplayInputActionSetAssetTypeActions;
 };
