@@ -15,11 +15,6 @@ FGameplayInputSourceCommand::FGameplayInputSourceCommand(const FGameplayTag Inpu
 	this->InputType = InputType;
 }
 
-bool FGameplayInputSourceCommand::operator==(const FGameplayInputSourceCommand& Other) const
-{
-	return InputSourceTag == Other.InputSourceTag && InputType == Other.InputType;
-}
-
 void UGameplayInputSourceCommandInstance::Initialize(const FGameplayTag& InInputSourceTag, const EGameplayInputType InInputType,
                                                uint8 InPriority, float InLifetime, float InTimestamp)
 {

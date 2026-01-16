@@ -39,7 +39,10 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputSourceCommand
 		return HashCombine(GetTypeHash(Entry.InputSourceTag), GetTypeHash(static_cast<uint8>(Entry.InputType)));
 	}
 
-	bool operator==(const FGameplayInputSourceCommand& Other) const;
+	FORCEINLINE bool operator==(const FGameplayInputSourceCommand& Other) const
+	{
+		return InputSourceTag == Other.InputSourceTag && InputType == Other.InputType;
+	}
 };
 
 USTRUCT(BlueprintType)

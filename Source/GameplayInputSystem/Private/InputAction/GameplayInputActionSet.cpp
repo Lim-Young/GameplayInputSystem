@@ -17,6 +17,18 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 	if (CheckInputCommandCanBeCaptured(InInputCommand))
 	{
 		CapturedInputCommands.Add(InInputCommand);
+
+		if (OwningInputAction->CurrentActionState != EGameplayInputActionState::Started)
+		{
+			BeginTrigger(InInputCommand);
+		}
+
+		// if (ValidateTriggerCanFinish())
+		// {
+		// 	FinishTrigger(true);
+		// }
+		OnInputCommandCaptured(InInputCommand);
+
 		return true;
 	};
 
@@ -24,20 +36,21 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 	return false;
 }
 
-bool UGameplayInputActionTrigger::ValidateTriggerCanFinish_Implementation()
+void UGameplayInputActionTrigger::OnInputCommandCaptured_Implementation(
+	const FGameplayInputSourceCommand& InInputCommand)
 {
-	return false;
 }
+
+// bool UGameplayInputActionTrigger::ValidateTriggerCanFinish_Implementation()
+// {
+// 	return false;
+// }
 
 void UGameplayInputActionTrigger::BeginTrigger(const FGameplayInputSourceCommand& InInputCommand)
 {
 	OwningInputAction->SetActionState(EGameplayInputActionState::Started);
 
 	OnTriggerBegin(InInputCommand);
-	if (ValidateTriggerCanFinish())
-	{
-		FinishTrigger(true);
-	}
 }
 
 void UGameplayInputActionTrigger::ResetTrigger()
@@ -53,7 +66,6 @@ void UGameplayInputActionTrigger::OnResetTrigger_Implementation()
 
 void UGameplayInputActionTrigger::OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand)
 {
-	FinishTrigger(true);
 }
 
 void UGameplayInputActionTrigger::PreTriggerFinished_Implementation(bool bWasSuccessful, bool bCanceled)
@@ -110,9 +122,14 @@ void UGameplayInputAction::SetActionState(const EGameplayInputActionState NewAct
 	CurrentActionState = NewActionState;
 	if (bBroadcastEvent)
 	{
-		check(OwningActionSet);
-		OwningActionSet->TriggerGameplayInputAction(InputActionTag, NewActionState);
+		BroadcastActionStateEvent(NewActionState);
 	}
+}
+
+void UGameplayInputAction::BroadcastActionStateEvent(const EGameplayInputActionState ActionState) const
+{
+	check(OwningActionSet);
+	OwningActionSet->TriggerGameplayInputAction(InputActionTag, ActionState);
 }
 
 void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTrigger,
@@ -159,9 +176,9 @@ void UGameplayInputAction::BeginAction(const FGameplayInputSourceCommand& InInpu
 {
 	for (UGameplayInputActionTrigger* Trigger : Triggers)
 	{
-		if (Trigger && Trigger->CaptureInputCommand(InInputCommand))
+		if (Trigger)
 		{
-			Trigger->BeginTrigger(InInputCommand);
+			Trigger->CaptureInputCommand(InInputCommand);
 		}
 	}
 }

@@ -19,5 +19,5 @@ public:
 	FGameplayTag InputSourceTag;
 
 	virtual bool CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
-	virtual bool ValidateTriggerCanFinish_Implementation() override;
+	virtual void OnInputCommandCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 };

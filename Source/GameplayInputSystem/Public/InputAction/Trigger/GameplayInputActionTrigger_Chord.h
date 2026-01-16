@@ -25,7 +25,7 @@ protected:
 	FTimerHandle ComboTimeoutHandle;
 
 	virtual void OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
-	virtual bool ValidateTriggerCanFinish_Implementation() override;
+	virtual void OnInputCommandCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual bool
 	CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual void OnResetTrigger_Implementation() override;

@@ -16,5 +16,6 @@ enum class EGameplayInputActionState : uint8
 	Started = 1,
 	Ongoing = 2,
 	Completed = 4,
-	Canceled = 8
+	Canceled = 8,
+	Triggered = 16
 };

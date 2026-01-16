@@ -19,12 +19,8 @@ bool UGameplayInputActionTrigger_Pressed::CheckInputCommandCanBeCaptured_Impleme
 	return false;
 }
 
-bool UGameplayInputActionTrigger_Pressed::ValidateTriggerCanFinish_Implementation()
+void UGameplayInputActionTrigger_Pressed::OnInputCommandCaptured_Implementation(
+	const FGameplayInputSourceCommand& InInputCommand)
 {
-	if (CapturedInputCommands.Num() == 0)
-	{
-		return false;
-	}
-
-	return true;
+	FinishTrigger(true);
 }

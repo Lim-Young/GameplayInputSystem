@@ -33,17 +33,20 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool CheckInputCommandCanBeCaptured(const FGameplayInputSourceCommand& InInputCommand);
 
-	/**
-	 * 该函数将在触发器开始后自动调用，用于验证触发器是否可以立即完成。
-	 * 若返回true，触发器将立即完成；若返回false，触发器将继续其执行流程，你需要自行维护触发器的状态，并在适当时机调用FinishTrigger函数以结束触发器。
-	 * 
-	 * This function will be called automatically after the trigger begins to validate whether the trigger can finish immediately.
-	 * If it returns true, the trigger will finish immediately; if it returns false, the trigger will continue its execution flow,
-	 * and you need to maintain the trigger's state yourself and call the FinishTrigger function at the appropriate time to end the trigger.
-	 * @return True if the trigger can finish immediately, false if it needs to continue executing.
-	 */
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
-	bool ValidateTriggerCanFinish();
+	void OnInputCommandCaptured(const FGameplayInputSourceCommand& InInputCommand);
+
+	// /**
+	//  * 该函数将在触发器开始后自动调用，用于验证触发器是否可以立即完成。
+	//  * 若返回true，触发器将立即完成；若返回false，触发器将继续其执行流程，你需要自行维护触发器的状态，并在适当时机调用FinishTrigger函数以结束触发器。
+	//  * 
+	//  * This function will be called automatically after the trigger begins to validate whether the trigger can finish immediately.
+	//  * If it returns true, the trigger will finish immediately; if it returns false, the trigger will continue its execution flow,
+	//  * and you need to maintain the trigger's state yourself and call the FinishTrigger function at the appropriate time to end the trigger.
+	//  * @return True if the trigger can finish immediately, false if it needs to continue executing.
+	//  */
+	// UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
+	// bool ValidateTriggerCanFinish();
 
 	void BeginTrigger(const FGameplayInputSourceCommand& InInputCommand);
 
@@ -99,6 +102,7 @@ class UGameplayInputAction : public UObject
 	GENERATED_BODY()
 
 	friend class UGameplayInputActionSet;
+	friend class UGameplayInputActionTrigger;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action", meta = (Categories = "GameplayInput.InputAction"))
@@ -119,6 +123,7 @@ private:
 public:
 	bool CheckCanActivateAction(const FGameplayInputSourceCommand& InInputCommand);
 	void SetActionState(EGameplayInputActionState NewActionState, bool bBroadcastEvent = true);
+	void BroadcastActionStateEvent(EGameplayInputActionState ActionState) const;
 	void FinishAction(UGameplayInputActionTrigger* ExecutingTrigger, bool bWasSuccessful, bool bCanceled = false);
 
 	void BeginAction(const FGameplayInputSourceCommand& InInputCommand);

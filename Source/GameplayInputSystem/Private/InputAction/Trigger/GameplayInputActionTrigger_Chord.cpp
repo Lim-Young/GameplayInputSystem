@@ -16,16 +16,17 @@ void UGameplayInputActionTrigger_Chord::OnTriggerBegin_Implementation(
 	}
 }
 
-bool UGameplayInputActionTrigger_Chord::ValidateTriggerCanFinish_Implementation()
+void UGameplayInputActionTrigger_Chord::OnInputCommandCaptured_Implementation(
+	const FGameplayInputSourceCommand& InInputCommand)
 {
 	if (ComboCommands.Num() == 0)
 	{
-		return false;
+		return;
 	}
 
 	if (CapturedInputCommands.Num() != ComboCommands.Num())
 	{
-		return false;
+		return;
 	}
 
 	if (bInOrder)
@@ -34,10 +35,11 @@ bool UGameplayInputActionTrigger_Chord::ValidateTriggerCanFinish_Implementation(
 		{
 			if (CapturedInputCommands[i] != ComboCommands[i])
 			{
-				return false;
+				return;
 			}
 		}
-		return true;
+		FinishTrigger(true);
+		return;
 	}
 
 	TSet<FGameplayInputSourceCommand> CapturedSet;
@@ -49,7 +51,10 @@ bool UGameplayInputActionTrigger_Chord::ValidateTriggerCanFinish_Implementation(
 		}
 	}
 
-	return CapturedSet.Num() == ComboCommands.Num();
+	if (CapturedSet.Num() == ComboCommands.Num())
+	{
+		FinishTrigger(true);
+	}
 }
 
 bool UGameplayInputActionTrigger_Chord::CheckInputCommandCanBeCaptured_Implementation(
@@ -57,6 +62,15 @@ bool UGameplayInputActionTrigger_Chord::CheckInputCommandCanBeCaptured_Implement
 {
 	if (ComboCommands.Num() == 0)
 	{
+		return false;
+	}
+
+	if (CapturedInputCommands.Num() == 0 && bInOrder)
+	{
+		if (InInputCommand == ComboCommands[0])
+		{
+			return true;
+		}
 		return false;
 	}
 
