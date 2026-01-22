@@ -24,7 +24,8 @@ public:
 	UPROPERTY(EditAnywhere, meta = (EditCondition = "!bActionGatedMode", EditConditionHides))
 	FGameplayInputSourceCommand GateCloseCommand;
 
-	UPROPERTY(EditAnywhere, meta = (EditCondition = "bActionGatedMode", EditConditionHides))
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "bActionGatedMode", EditConditionHides,
+		Categories = "GameplayInput.InputAction"))
 	FGameplayTag GatedActionTag;
 
 	UPROPERTY(EditAnywhere, meta = (Categories = "GameplayInput.InputSource"))
