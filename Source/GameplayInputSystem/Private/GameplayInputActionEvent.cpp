@@ -6,33 +6,33 @@
 FGameplayInputActionEvent::FGameplayInputActionEvent()
 {
 	InputActionTag = FGameplayTag::EmptyTag;
-	InputActionState = EGameplayInputActionState::Idle;
+	InputActionEvent = EGameplayInputActionEvent::None;
 }
 
 FGameplayInputActionEvent::FGameplayInputActionEvent(const FGameplayTag InputSourceTag)
 {
 	InputActionTag = InputSourceTag;
-	InputActionState = EGameplayInputActionState::Idle;
+	InputActionEvent = EGameplayInputActionEvent::None;
 }
 
 FGameplayInputActionEvent::FGameplayInputActionEvent(const FGameplayTag InputSourceTag,
-                                                     EGameplayInputActionState InInputActionState)
+                                                     EGameplayInputActionEvent InInputActionEvent)
 {
 	InputActionTag = InputSourceTag;
-	InputActionState = InInputActionState;
+	InputActionEvent = InInputActionEvent;
 }
 
 bool FGameplayInputActionEvent::operator==(const FGameplayInputActionEvent& Other) const
 {
-	return InputActionTag == Other.InputActionTag && InputActionState == Other.InputActionState;
+	return InputActionTag == Other.InputActionTag && InputActionEvent == Other.InputActionEvent;
 }
 
 void UGameplayInputActionEventInstance::Initialize(const FGameplayTag& InInputActionTag,
-                                                   const EGameplayInputActionState InInputActionState, uint8 InPriority,
+                                                   const EGameplayInputActionEvent InInputActionEvent, uint8 InPriority,
                                                    float InLifetime, float InTimestamp)
 {
 	InputActionTag = InInputActionTag;
-	InputActionState = InInputActionState;
+	InputActionEvent = InInputActionEvent;
 	Priority = InPriority;
 	Lifetime = InLifetime;
 
@@ -40,9 +40,9 @@ void UGameplayInputActionEventInstance::Initialize(const FGameplayTag& InInputAc
 }
 
 void UGameplayInputActionEventInstance::Initialize(const FGameplayTag& InInputActionTag,
-                                                   const EGameplayInputActionState InInputActionState,
+                                                   const EGameplayInputActionEvent InInputActionEvent,
                                                    const FGameplayInputActionEventConfig& InConfig)
 {
-	Initialize(InInputActionTag, InInputActionState, InConfig.Priority, InConfig.Lifetime,
+	Initialize(InInputActionTag, InInputActionEvent, InConfig.Priority, InConfig.Lifetime,
 	           GetWorld()->GetTimeSeconds());
 }

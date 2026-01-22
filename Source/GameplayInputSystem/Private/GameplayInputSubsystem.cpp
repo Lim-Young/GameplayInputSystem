@@ -36,6 +36,11 @@ void UGameplayInputSubsystem::InjectGameplayInput(const FGameplayTag& InputSourc
 		BroadcastGameplayInputEvent(InputSourceTag, InputType);
 	}
 
+	if (ActiveGameplayInputActionSets.IsEmpty())
+	{
+		return;
+	}
+
 	ActiveGameplayInputActionSets.HeapTop()->HandleInput(FGameplayInputSourceCommand(InputSourceTag, InputType));
 }
 
@@ -74,7 +79,7 @@ void UGameplayInputSubsystem::FinishAndUnregisterGameplayInputBuffer(UGameplayIn
 			if (Buffer->ShouldBuffInputActionEvent())
 			{
 				BroadcastGameplayInputActionTriggered(ResultActionEventInstance->InputActionTag,
-				                                      ResultActionEventInstance->InputActionState);
+				                                      ResultActionEventInstance->InputActionEvent);
 			}
 		}
 
@@ -124,7 +129,7 @@ void UGameplayInputSubsystem::RemoveGameplayInputActionSet(UGameplayInputActionS
 }
 
 void UGameplayInputSubsystem::ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag,
-                                                              const EGameplayInputActionState ActionState)
+                                                              const EGameplayInputActionEvent ActionState)
 {
 	if (GameplayInputBuffers.Num() > 0)
 	{
@@ -158,7 +163,7 @@ void UGameplayInputSubsystem::BroadcastGameplayInputEvent(const FGameplayTag& In
 }
 
 void UGameplayInputSubsystem::BroadcastGameplayInputActionTriggered(const FGameplayTag& InputActionTag,
-                                                                    const EGameplayInputActionState ActionState) const
+                                                                    const EGameplayInputActionEvent ActionState) const
 {
 	OnGameplayInputActionTriggered.Broadcast(InputActionTag, ActionState);
 }

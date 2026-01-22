@@ -32,7 +32,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool CheckCanBeginTrigger(const FGameplayInputSourceCommand& InInputCommand);
-	
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool CheckInputCommandCanBeCaptured(const FGameplayInputSourceCommand& InInputCommand);
 
@@ -116,18 +116,22 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action")
 	uint8 Priority = 0;
+	
+	UPROPERTY(EditAnywhere, Category = "Gameplay Input Action")
+	bool bCancelSamePriorityActions = true;
 
 private:
-	EGameplayInputActionState CurrentActionState = EGameplayInputActionState::Idle;
+	EGameplayInputActionState CurrentActionState = EGameplayInputActionState::Inactive;
 
 	UPROPERTY()
 	UGameplayInputActionSet* OwningActionSet = nullptr;
 
 public:
 	bool CheckCanActivateAction(const FGameplayInputSourceCommand& InInputCommand);
-	void SetActionState(EGameplayInputActionState NewActionState, bool bBroadcastEvent = true);
+	void SetActionState(EGameplayInputActionState NewActionState);
 	EGameplayInputActionState GetCurrentActionState() const;
-	void BroadcastActionStateEvent(EGameplayInputActionState ActionState) const;
+
+	void BroadcastActionEvent(EGameplayInputActionEvent ActionState) const;
 	void FinishAction(UGameplayInputActionTrigger* ExecutingTrigger, bool bWasSuccessful, bool bCanceled = false);
 
 	void BeginAction(const FGameplayInputSourceCommand& InInputCommand);
@@ -160,14 +164,19 @@ private:
 	UPROPERTY()
 	TObjectPtr<UGameplayInputSubsystem> OwningSubsystem = nullptr;
 
+	uint8 PreviousPriority = 0;
+	TSet<FGameplayInputSourceCommand> SameInputCommandBuffer;
+
 public:
 	bool HandleInput(const FGameplayInputSourceCommand& InInputCommand,
 	                 bool bClampedByHigherPriority = false,
 	                 uint8 CustomPriority = -1);
+	
+	void CancelSamePriorityActionsExcept(const UGameplayInputAction* ExceptAction) const;
 
 private:
 	void TriggerGameplayInputAction(const FGameplayTag& InputActionTag,
-	                                const EGameplayInputActionState ActionState) const;
+	                                const EGameplayInputActionEvent ActionState) const;
 
 #if WITH_EDITOR
 

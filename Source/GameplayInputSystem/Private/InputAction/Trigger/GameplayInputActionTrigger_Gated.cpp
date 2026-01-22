@@ -42,7 +42,7 @@ void UGameplayInputActionTrigger_Gated::OnInputCommandCaptured_Implementation(
 		}
 		else if (InInputCommand == TriggerCommand)
 		{
-			OwningInputAction->BroadcastActionStateEvent(EGameplayInputActionState::Triggered);
+			OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Triggered);
 		}
 	}
 }

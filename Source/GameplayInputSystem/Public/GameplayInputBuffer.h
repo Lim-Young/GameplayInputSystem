@@ -47,7 +47,7 @@ public:
 	EGameplayInputBufferPolicy InputBufferPolicy = EGameplayInputBufferPolicy::PriorityBased;
 
 	bool HasInputSourceCommand(const FGameplayTag& InputSourceTag, EGameplayInputType InputType) const;
-	bool HasInputActionEvent(const FGameplayTag& InputActionTag, EGameplayInputActionState ActionState) const;
+	bool HasInputActionEvent(const FGameplayTag& InputActionTag, EGameplayInputActionEvent ActionEvent) const;
 
 	FGameplayInputSourceCommandConfig& GetInputSourceCommandConfig(const FGameplayTag& InputSourceTag,
 	                                                               EGameplayInputType InputType);
@@ -89,7 +89,7 @@ public:
 	            UGameplayInputActionEventInstance*& ResultInputActionEvent);
 
 	bool ReceiveGameplayInputSourceCommand(FGameplayTag InputSourceTag, EGameplayInputType InputType);
-	bool ReceiveGameplayInputActionEvent(const FGameplayTag& InputActionTag, EGameplayInputActionState ActionState);
+	bool ReceiveGameplayInputActionEvent(const FGameplayTag& InputActionTag, EGameplayInputActionEvent ActionEvent);
 
 	EGameplayInputBufferScope GetInputBufferScope() const;
 	bool ShouldBuffInputSourceCommand() const;

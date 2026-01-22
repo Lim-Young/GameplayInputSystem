@@ -39,9 +39,9 @@ struct FGameplayInputActionForwardingConfig
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay Input Forwarding")
-	TMap<EGameplayInputActionState, FGameplayTag> ActionStateToForwardingTagMap;
+	TMap<EGameplayInputActionEvent, FGameplayTag> ActionStateToForwardingTagMap;
 
-	bool TryGetForwardingTag(const EGameplayInputActionState InActionState, FGameplayTag& OutForwardingTag) const;
+	bool TryGetForwardingTag(const EGameplayInputActionEvent InActionState, FGameplayTag& OutForwardingTag) const;
 };
 
 USTRUCT(BlueprintType)
@@ -85,7 +85,7 @@ public:
 	bool TryGetInputSourceForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputType InInputType,
 	                                    FGameplayTag& OutForwardingTag) const;
 
-	bool TryGetInputActionForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputActionState InActionState,
+	bool TryGetInputActionForwardingTag(const FGameplayTag& InInputTag, const EGameplayInputActionEvent InActionState,
 	                                    FGameplayTag& OutForwardingTag) const;
 
 	uint8 GetPriority() const;

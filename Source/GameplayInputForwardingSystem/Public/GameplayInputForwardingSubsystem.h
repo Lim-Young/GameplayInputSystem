@@ -31,7 +31,7 @@ protected:
 
 	UFUNCTION()
 	void HandleGameplayInputActionEvent(const FGameplayTag& InputActionTag,
-	                                    const EGameplayInputActionState ActionState);
+	                                    const EGameplayInputActionEvent ActionState);
 
 private:
 	UPROPERTY()

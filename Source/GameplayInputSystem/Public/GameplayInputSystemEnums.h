@@ -10,12 +10,19 @@ enum class EGameplayInputType : uint8
 };
 
 UENUM(BlueprintType, meta=(Bitflags))
-enum class EGameplayInputActionState : uint8
+enum class EGameplayInputActionEvent : uint8
 {
-	Idle = 0,
+	None = 0 UMETA(Hidden),
 	Started = 1,
 	Ongoing = 2,
 	Completed = 4,
 	Canceled = 8,
 	Triggered = 16
+};
+
+UENUM(BlueprintType)
+enum class EGameplayInputActionState : uint8
+{
+	Inactive,
+	Active
 };

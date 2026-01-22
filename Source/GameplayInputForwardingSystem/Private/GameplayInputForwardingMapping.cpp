@@ -15,7 +15,7 @@ bool FGameplayInputSourceForwardingConfig::TryGetForwardingTag(const EGameplayIn
 	return false;
 }
 
-bool FGameplayInputActionForwardingConfig::TryGetForwardingTag(const EGameplayInputActionState InActionState,
+bool FGameplayInputActionForwardingConfig::TryGetForwardingTag(const EGameplayInputActionEvent InActionState,
                                                                FGameplayTag& OutForwardingTag) const
 {
 	if (ActionStateToForwardingTagMap.Contains(InActionState))
@@ -40,7 +40,7 @@ bool UGameplayInputForwardingMapping::TryGetInputSourceForwardingTag(const FGame
 }
 
 bool UGameplayInputForwardingMapping::TryGetInputActionForwardingTag(const FGameplayTag& InInputTag,
-                                                                     const EGameplayInputActionState InActionState,
+                                                                     const EGameplayInputActionEvent InActionState,
                                                                      FGameplayTag& OutForwardingTag) const
 {
 	if (InputActionForwardingMap.Contains(InInputTag))

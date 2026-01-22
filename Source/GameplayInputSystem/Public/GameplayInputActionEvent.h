@@ -17,18 +17,18 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputActionEvent
 	UPROPERTY(EditAnywhere, meta=(Categories = "GameplayInput.InputAction"))
 	FGameplayTag InputActionTag;
 
-	EGameplayInputActionState InputActionState;
+	EGameplayInputActionEvent InputActionEvent;
 
 	FGameplayInputActionEvent();
 
 	FGameplayInputActionEvent(const FGameplayTag InputSourceTag);
 
-	FGameplayInputActionEvent(const FGameplayTag InputSourceTag, EGameplayInputActionState InInputActionState);
+	FGameplayInputActionEvent(const FGameplayTag InputSourceTag, EGameplayInputActionEvent InInputActionEvent);
 
 	// GetTypeHash
 	friend uint32 GetTypeHash(const FGameplayInputActionEvent& Entry)
 	{
-		return HashCombine(GetTypeHash(Entry.InputActionTag), GetTypeHash(Entry.InputActionState));
+		return HashCombine(GetTypeHash(Entry.InputActionTag), GetTypeHash(Entry.InputActionEvent));
 	}
 
 	bool operator==(const FGameplayInputActionEvent& Other) const;
@@ -39,8 +39,8 @@ struct GAMEPLAYINPUTSYSTEM_API FGameplayInputActionEventConfig
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, meta = (Bitmask, BitmaskEnum = "/Script/GameplayInputSystem.EGameplayInputActionState"))
-	int32 ListenedActionStates = 0;
+	UPROPERTY(EditAnywhere, meta = (Bitmask, BitmaskEnum = "/Script/GameplayInputSystem.EGameplayInputActionEvent"))
+	int32 ListenedActionEvents = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Input System")
 	uint8 Priority = 0;
@@ -55,16 +55,15 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputActionEventInstance : public UObject
 	GENERATED_BODY()
 
 public:
-	void Initialize(const FGameplayTag& InInputActionTag, const EGameplayInputActionState InInputActionState,
-	                uint8 InPriority,
-	                float InLifetime, float InTimestamp);
+	void Initialize(const FGameplayTag& InInputActionTag, const EGameplayInputActionEvent InInputActionEvent,
+	                uint8 InPriority, float InLifetime, float InTimestamp);
 
-	void Initialize(const FGameplayTag& InInputActionTag, const EGameplayInputActionState InInputActionState,
+	void Initialize(const FGameplayTag& InInputActionTag, const EGameplayInputActionEvent InInputActionEvent,
 	                const FGameplayInputActionEventConfig& InConfig);
 
 public:
 	FGameplayTag InputActionTag;
-	EGameplayInputActionState InputActionState;
+	EGameplayInputActionEvent InputActionEvent;
 	uint8 Priority = 0;
 	float Lifetime = 0.0f;
 

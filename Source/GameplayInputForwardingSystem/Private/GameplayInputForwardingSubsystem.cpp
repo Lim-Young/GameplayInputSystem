@@ -54,7 +54,7 @@ void UGameplayInputForwardingSubsystem::HandleGameplayInputSourceEvent(const FGa
 }
 
 void UGameplayInputForwardingSubsystem::HandleGameplayInputActionEvent(const FGameplayTag& InputActionTag,
-                                                                       const EGameplayInputActionState ActionState)
+                                                                       const EGameplayInputActionEvent ActionState)
 {
 	UGameplayInputForwardingMapping* Mapping = nullptr;
 	if (!TryGetInputForwardingMapping(Mapping))

@@ -30,7 +30,7 @@ bool UGameplayInputActionTrigger_MultiGated::CheckInputCommandCanBeCaptured_Impl
 	{
 		if (InInputCommand == TriggerCommand)
 		{
-			OwningInputAction->BroadcastActionStateEvent(EGameplayInputActionState::Triggered);
+			OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Triggered);
 			return false;
 		}
 

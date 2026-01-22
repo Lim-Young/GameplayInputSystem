@@ -11,7 +11,7 @@ bool UGameplayInputBufferSchema::HasInputSourceCommand(const FGameplayTag& Input
 }
 
 bool UGameplayInputBufferSchema::HasInputActionEvent(const FGameplayTag& InputActionTag,
-                                                     EGameplayInputActionState ActionState) const
+                                                     EGameplayInputActionEvent ActionEvent) const
 {
 	const FGameplayInputActionEvent InputActionEvent(InputActionTag);
 	if (!InputActions.Contains(InputActionEvent))
@@ -19,7 +19,7 @@ bool UGameplayInputBufferSchema::HasInputActionEvent(const FGameplayTag& InputAc
 		return false;
 	}
 
-	return InputActions[InputActionEvent].ListenedActionStates | static_cast<uint8>(ActionState);
+	return InputActions[InputActionEvent].ListenedActionEvents | static_cast<uint8>(ActionEvent);
 }
 
 FGameplayInputSourceCommandConfig& UGameplayInputBufferSchema::GetInputSourceCommandConfig(
@@ -326,17 +326,17 @@ bool UGameplayInputBuffer::ReceiveGameplayInputSourceCommand(const FGameplayTag 
 }
 
 bool UGameplayInputBuffer::ReceiveGameplayInputActionEvent(const FGameplayTag& InputActionTag,
-                                                           const EGameplayInputActionState ActionState)
+                                                           EGameplayInputActionEvent ActionEvent)
 {
 	if (ShouldBuffInputActionEvent())
 	{
-		if (GameplayInputBufferSchema->HasInputActionEvent(InputActionTag, ActionState))
+		if (GameplayInputBufferSchema->HasInputActionEvent(InputActionTag, ActionEvent))
 		{
 			const FGameplayInputActionEventConfig InputActionConfig = GameplayInputBufferSchema->
 				GetInputActionEventConfig(InputActionTag);
 
 			UGameplayInputActionEventInstance* NewInputActionEvent = NewObject<UGameplayInputActionEventInstance>(this);
-			NewInputActionEvent->Initialize(InputActionTag, ActionState, InputActionConfig);
+			NewInputActionEvent->Initialize(InputActionTag, ActionEvent, InputActionConfig);
 
 			GameplayInputActionEventQueue.Add(NewInputActionEvent);
 			return true;

@@ -30,7 +30,7 @@ private:
 	                                             const EGameplayInputType, InputType);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameplayInputActionTriggered, const FGameplayTag&, InputActionTag,
-	                                             const EGameplayInputActionState, ActionState);
+	                                             const EGameplayInputActionEvent, ActionState);
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Gameplay Input System|Events")
@@ -66,10 +66,10 @@ public:
 	void RemoveGameplayInputActionSet(UGameplayInputActionSet* InInputActionSet);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
-	void ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag, EGameplayInputActionState ActionState);
+	void ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag, EGameplayInputActionEvent ActionState);
 
 private:
 	void BroadcastGameplayInputEvent(const FGameplayTag& InputSourceTag, EGameplayInputType InputType) const;
 	void BroadcastGameplayInputActionTriggered(const FGameplayTag& InputActionTag,
-	                                           const EGameplayInputActionState ActionState) const;
+	                                           const EGameplayInputActionEvent ActionState) const;
 };

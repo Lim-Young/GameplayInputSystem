@@ -8,8 +8,6 @@ void UGameplayInputActionTrigger_Chord::OnTriggerBegin_Implementation(
 {
 	if (ComboTimeout > 0.0f)
 	{
-		OwningInputAction->SetActionState(EGameplayInputActionState::Ongoing, false);
-
 		GetTimerManager().SetTimer(ComboTimeoutHandle, this,
 		                           &UGameplayInputActionTrigger_Chord::OnComboTimeout,
 		                           ComboTimeout, false);

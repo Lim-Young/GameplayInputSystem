@@ -18,7 +18,7 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 	{
 		CapturedInputCommands.Add(InInputCommand);
 
-		if (OwningInputAction->CurrentActionState != EGameplayInputActionState::Started)
+		if (OwningInputAction->CurrentActionState != EGameplayInputActionState::Active)
 		{
 			if (CheckCanBeginTrigger(InInputCommand))
 			{
@@ -56,7 +56,7 @@ void UGameplayInputActionTrigger::OnInputCommandCaptured_Implementation(
 
 void UGameplayInputActionTrigger::BeginTrigger(const FGameplayInputSourceCommand& InInputCommand)
 {
-	OwningInputAction->SetActionState(EGameplayInputActionState::Started);
+	OwningInputAction->SetActionState(EGameplayInputActionState::Active);
 
 	OnTriggerBegin(InInputCommand);
 }
@@ -125,13 +125,11 @@ bool UGameplayInputAction::CheckCanActivateAction(const FGameplayInputSourceComm
 	return false;
 }
 
-void UGameplayInputAction::SetActionState(const EGameplayInputActionState NewActionState, bool bBroadcastEvent)
+void UGameplayInputAction::SetActionState(EGameplayInputActionState NewActionState)
 {
 	CurrentActionState = NewActionState;
-	if (bBroadcastEvent)
-	{
-		BroadcastActionStateEvent(NewActionState);
-	}
+
+	// TODO:
 }
 
 EGameplayInputActionState UGameplayInputAction::GetCurrentActionState() const
@@ -139,7 +137,7 @@ EGameplayInputActionState UGameplayInputAction::GetCurrentActionState() const
 	return CurrentActionState;
 }
 
-void UGameplayInputAction::BroadcastActionStateEvent(const EGameplayInputActionState ActionState) const
+void UGameplayInputAction::BroadcastActionEvent(const EGameplayInputActionEvent ActionState) const
 {
 	check(OwningActionSet);
 	OwningActionSet->TriggerGameplayInputAction(InputActionTag, ActionState);
@@ -150,13 +148,18 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 {
 	if (bWasSuccessful)
 	{
-		SetActionState(EGameplayInputActionState::Completed);
+		if (bCancelSamePriorityActions)
+		{
+			OwningActionSet->CancelSamePriorityActionsExcept(this);
+		}
+
+		BroadcastActionEvent(EGameplayInputActionEvent::Completed);
 	}
 	else
 	{
 		if (bCanceled)
 		{
-			SetActionState(EGameplayInputActionState::Canceled);
+			BroadcastActionEvent(EGameplayInputActionEvent::Canceled);
 		}
 		else
 		{
@@ -182,7 +185,7 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 		}
 	}
 
-	SetActionState(EGameplayInputActionState::Idle, false);
+	SetActionState(EGameplayInputActionState::Inactive);
 }
 
 void UGameplayInputAction::BeginAction(const FGameplayInputSourceCommand& InInputCommand)
@@ -251,6 +254,26 @@ bool UGameplayInputActionSet::HandleInput(const FGameplayInputSourceCommand& InI
                                           const bool bClampedByHigherPriority,
                                           const uint8 CustomPriority)
 {
+	if (bClampedByHigherPriority)
+	{
+		if (!SameInputCommandBuffer.IsEmpty())
+		{
+			if (CustomPriority != PreviousPriority)
+			{
+				SameInputCommandBuffer.Empty();
+			}
+
+			if (SameInputCommandBuffer.Contains(InInputCommand))
+			{
+				return false;
+			}
+		}
+	}
+	else
+	{
+		SameInputCommandBuffer.Empty();
+	}
+
 	TArray<UGameplayInputAction*> MaxPriorityActions;
 	uint8 MaxPriority = 0;
 	for (UGameplayInputAction* InputAction : Actions)
@@ -284,11 +307,30 @@ bool UGameplayInputActionSet::HandleInput(const FGameplayInputSourceCommand& InI
 	{
 		InputAction->BeginAction(InInputCommand);
 	}
+
+	if (bClampedByHigherPriority)
+	{
+		SameInputCommandBuffer.Add(InInputCommand);
+		PreviousPriority = CustomPriority;
+	}
 	return true;
 }
 
+void UGameplayInputActionSet::CancelSamePriorityActionsExcept(const UGameplayInputAction* ExceptAction) const
+{
+	for (UGameplayInputAction* InputAction : Actions)
+	{
+		if (InputAction && InputAction != ExceptAction &&
+			InputAction->CurrentActionState == EGameplayInputActionState::Active &&
+			InputAction->Priority == ExceptAction->Priority)
+		{
+			InputAction->FinishAction(nullptr, false, true);
+		}
+	}
+}
+
 void UGameplayInputActionSet::TriggerGameplayInputAction(const FGameplayTag& InputActionTag,
-                                                         const EGameplayInputActionState ActionState) const
+                                                         const EGameplayInputActionEvent ActionState) const
 {
 	if (IsValid(OwningSubsystem))
 	{
