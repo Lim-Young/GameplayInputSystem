@@ -18,7 +18,7 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 	{
 		CapturedInputCommands.Add(InInputCommand);
 
-		if (OwningInputAction->CurrentActionState != EGameplayInputActionState::Active)
+		if (OwningInputAction->IsInactive())
 		{
 			if (CheckCanBeginTrigger(InInputCommand))
 			{
@@ -152,16 +152,10 @@ void UGameplayInputAction::FinishAction(UGameplayInputActionTrigger* ExecutingTr
 		{
 			OwningActionSet->CancelSamePriorityActionsExcept(this);
 		}
-
-		BroadcastActionEvent(EGameplayInputActionEvent::Completed);
 	}
 	else
 	{
-		if (bCanceled)
-		{
-			BroadcastActionEvent(EGameplayInputActionEvent::Canceled);
-		}
-		else
+		if (!bCanceled)
 		{
 			const TArray<FGameplayInputSourceCommand> CapturedInputCommands = ExecutingTrigger->
 				GetCapturedInputCommands();
@@ -197,6 +191,26 @@ void UGameplayInputAction::BeginAction(const FGameplayInputSourceCommand& InInpu
 			Trigger->CaptureInputCommand(InInputCommand);
 		}
 	}
+}
+
+UGameplayInputActionSet* UGameplayInputAction::GetOwningActionSet() const
+{
+	return OwningActionSet;
+}
+
+bool UGameplayInputAction::IsActive() const
+{
+	return CurrentActionState == EGameplayInputActionState::Active;
+}
+
+bool UGameplayInputAction::IsInactive() const
+{
+	return CurrentActionState == EGameplayInputActionState::Inactive;
+}
+
+bool UGameplayInputAction::IsPending() const
+{
+	return CurrentActionState == EGameplayInputActionState::Pending;
 }
 
 UGameplayInputActionSet* UGameplayInputActionSet::CreateByTemplateObject(const UGameplayInputActionSet* TemplateObject,
@@ -320,13 +334,28 @@ void UGameplayInputActionSet::CancelSamePriorityActionsExcept(const UGameplayInp
 {
 	for (UGameplayInputAction* InputAction : Actions)
 	{
-		if (InputAction && InputAction != ExceptAction &&
-			InputAction->CurrentActionState == EGameplayInputActionState::Active &&
+		if (InputAction && InputAction != ExceptAction && !InputAction->IsInactive() &&
 			InputAction->Priority == ExceptAction->Priority)
 		{
 			InputAction->FinishAction(nullptr, false, true);
 		}
 	}
+}
+
+bool UGameplayInputActionSet::FindActionByTag(const FGameplayTag& InputActionTag,
+                                              const UGameplayInputAction*& OutAction) const
+{
+	for (UGameplayInputAction* InputAction : Actions)
+	{
+		if (InputAction && InputAction->InputActionTag == InputActionTag)
+		{
+			OutAction = InputAction;
+			return true;
+		}
+	}
+
+	OutAction = nullptr;
+	return false;
 }
 
 void UGameplayInputActionSet::TriggerGameplayInputAction(const FGameplayTag& InputActionTag,

@@ -24,5 +24,6 @@ UENUM(BlueprintType)
 enum class EGameplayInputActionState : uint8
 {
 	Inactive,
+	Pending,
 	Active
 };

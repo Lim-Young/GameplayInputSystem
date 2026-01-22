@@ -135,6 +135,12 @@ public:
 	void FinishAction(UGameplayInputActionTrigger* ExecutingTrigger, bool bWasSuccessful, bool bCanceled = false);
 
 	void BeginAction(const FGameplayInputSourceCommand& InInputCommand);
+	
+	UGameplayInputActionSet* GetOwningActionSet() const;
+	
+	bool IsActive() const;
+	bool IsInactive() const;
+	bool IsPending() const;
 };
 
 /**
@@ -173,6 +179,8 @@ public:
 	                 uint8 CustomPriority = -1);
 	
 	void CancelSamePriorityActionsExcept(const UGameplayInputAction* ExceptAction) const;
+	
+	bool FindActionByTag(const FGameplayTag& InputActionTag, const UGameplayInputAction*& OutAction) const;
 
 private:
 	void TriggerGameplayInputAction(const FGameplayTag& InputActionTag,

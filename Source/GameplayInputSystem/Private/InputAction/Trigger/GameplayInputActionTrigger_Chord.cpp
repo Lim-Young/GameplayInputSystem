@@ -8,6 +8,8 @@ void UGameplayInputActionTrigger_Chord::OnTriggerBegin_Implementation(
 {
 	if (ComboTimeout > 0.0f)
 	{
+		OwningInputAction->SetActionState(EGameplayInputActionState::Pending);
+
 		GetTimerManager().SetTimer(ComboTimeoutHandle, this,
 		                           &UGameplayInputActionTrigger_Chord::OnComboTimeout,
 		                           ComboTimeout, false);
@@ -36,6 +38,8 @@ void UGameplayInputActionTrigger_Chord::OnInputCommandCaptured_Implementation(
 				return;
 			}
 		}
+
+		OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Completed);
 		FinishTrigger(true);
 		return;
 	}
@@ -51,6 +55,8 @@ void UGameplayInputActionTrigger_Chord::OnInputCommandCaptured_Implementation(
 
 	if (CapturedSet.Num() == ComboCommands.Num())
 	{
+		OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Completed);
+
 		FinishTrigger(true);
 	}
 }

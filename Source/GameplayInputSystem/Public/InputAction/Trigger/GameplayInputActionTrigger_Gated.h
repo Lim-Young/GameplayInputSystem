@@ -16,17 +16,25 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputActionTrigger_Gated : public UGamepl
 
 public:
 	UPROPERTY(EditAnywhere)
+	bool bActionGatedMode = false;
+
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "!bActionGatedMode", EditConditionHides))
 	FGameplayInputSourceCommand GateOpenCommand;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "!bActionGatedMode", EditConditionHides))
 	FGameplayInputSourceCommand GateCloseCommand;
 
-	UPROPERTY(EditAnywhere)
-	FGameplayInputSourceCommand TriggerCommand;
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "bActionGatedMode", EditConditionHides))
+	FGameplayTag GatedActionTag;
 
-	UPROPERTY(EditAnywhere)
-	bool bCompleteOnGateClose = false;
-
+	UPROPERTY(EditAnywhere, meta = (Categories = "GameplayInput.InputSource"))
+	FGameplayTag TriggerInputSourceTag;
+	
+private:
+	bool bIsGateOpen = false;
+	
+protected:
+	virtual void OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual bool
 	CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual void OnInputCommandCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;

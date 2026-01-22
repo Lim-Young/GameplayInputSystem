@@ -3,9 +3,32 @@
 
 #include "InputAction/Trigger/GameplayInputActionTrigger_Gated.h"
 
+void UGameplayInputActionTrigger_Gated::OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand)
+{
+	OwningInputAction->SetActionState(EGameplayInputActionState::Pending);
+}
+
 bool UGameplayInputActionTrigger_Gated::CheckInputCommandCanBeCaptured_Implementation(
 	const FGameplayInputSourceCommand& InInputCommand)
 {
+	if (bActionGatedMode)
+	{
+		const UGameplayInputAction* InputAction;
+		if (OwningInputAction->GetOwningActionSet()->FindActionByTag(GatedActionTag, InputAction)
+			&& InputAction->IsActive() && InInputCommand.InputSourceTag == TriggerInputSourceTag)
+		{
+			bIsGateOpen = true;
+			return true;
+		}
+
+		if (bIsGateOpen)
+		{
+			FinishTrigger(false, true);
+		}
+		bIsGateOpen = false;
+		return false;
+	}
+
 	if (CapturedInputCommands.Num() == 0)
 	{
 		if (InInputCommand == GateOpenCommand)
@@ -16,7 +39,7 @@ bool UGameplayInputActionTrigger_Gated::CheckInputCommandCanBeCaptured_Implement
 		return false;
 	}
 
-	if (InInputCommand == GateCloseCommand || InInputCommand == TriggerCommand)
+	if (InInputCommand == GateCloseCommand || InInputCommand.InputSourceTag == TriggerInputSourceTag)
 	{
 		return true;
 	}
@@ -27,22 +50,26 @@ bool UGameplayInputActionTrigger_Gated::CheckInputCommandCanBeCaptured_Implement
 void UGameplayInputActionTrigger_Gated::OnInputCommandCaptured_Implementation(
 	const FGameplayInputSourceCommand& InInputCommand)
 {
-	if (CapturedInputCommands.Num() > 1)
+	if (!bActionGatedMode)
 	{
 		if (InInputCommand == GateCloseCommand)
 		{
-			if (bCompleteOnGateClose)
-			{
-				FinishTrigger(true);
-			}
-			else
-			{
-				FinishTrigger(false, true);
-			}
+			FinishTrigger(false, true);
+			return;
 		}
-		else if (InInputCommand == TriggerCommand)
+	}
+
+	if (InInputCommand.InputSourceTag == TriggerInputSourceTag)
+	{
+		if (InInputCommand.InputType == EGameplayInputType::Pressed)
 		{
-			OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Triggered);
+			OwningInputAction->SetActionState(EGameplayInputActionState::Active);
+			OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Started);
+		}
+		else
+		{
+			OwningInputAction->SetActionState(EGameplayInputActionState::Pending);
+			OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Completed);
 		}
 	}
 }
