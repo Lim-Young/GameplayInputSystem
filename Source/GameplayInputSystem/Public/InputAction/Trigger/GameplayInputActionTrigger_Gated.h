@@ -35,6 +35,7 @@ private:
 	bool bIsGateOpen = false;
 
 public:
+	virtual bool CheckCanActivate_Implementation(FGameplayInputSourceCommand InInputCommand) override;
 	virtual void OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual bool
 	CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;

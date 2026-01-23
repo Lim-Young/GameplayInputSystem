@@ -16,11 +16,11 @@ class GAMEPLAYINPUTSYSTEM_API UGameplayInputActionTrigger_Hold : public UGamepla
 
 private:
 	bool bIsHolding = false;
-	
+
 public:
 	UPROPERTY(EditAnywhere, meta = (Categories = "GameplayInput.InputSource"))
 	FGameplayTag InputSourceTag;
-	
+
 	virtual bool
 	CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual void OnInputCommandCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;

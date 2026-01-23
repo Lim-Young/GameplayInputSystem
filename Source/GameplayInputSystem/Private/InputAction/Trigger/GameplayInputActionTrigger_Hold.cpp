@@ -10,6 +10,11 @@ bool UGameplayInputActionTrigger_Hold::CheckInputCommandCanBeCaptured_Implementa
 	{
 		return false;
 	}
+	
+	if (bIsHolding && InInputCommand.InputType == EGameplayInputType::Released)
+	{
+		OwningInputAction->SetActionState(EGameplayInputActionState::Inactive);
+	}
 
 	return true;
 }

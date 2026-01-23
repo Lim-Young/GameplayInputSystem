@@ -3,6 +3,11 @@
 
 #include "InputAction/Trigger/GameplayInputActionTrigger_Gated.h"
 
+bool UGameplayInputActionTrigger_Gated::CheckCanActivate_Implementation(FGameplayInputSourceCommand InInputCommand)
+{
+	return Super::CheckCanActivate_Implementation(InInputCommand);
+}
+
 void UGameplayInputActionTrigger_Gated::OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand)
 {
 	OwningInputAction->SetActionState(EGameplayInputActionState::Pending);
@@ -21,8 +26,16 @@ bool UGameplayInputActionTrigger_Gated::CheckInputCommandCanBeCaptured_Implement
 		}
 		else
 		{
-			// TODO: 目前Gated触发器的Action在被关闭时不会自动关闭触发器，状态会一直保持Pending，目前不会有太大影响，后续需要处理好状态问题
 			bIsGateOpen = false;
+			if (!OwningInputAction->IsInactive())
+			{
+				// TODO: 等待进一步重构，明确Check函数可修改状态，并确保Action处理时从低优先级往高优先级处理，这样高优先级Action可捕获到低优先级Action的状态变化
+				// 目前实现上是可行的，但不规范
+				OwningInputAction->SetActionState(EGameplayInputActionState::Inactive);
+				return true;
+			}
+
+			return false;
 		}
 
 		if (bIsGateOpen && InInputCommand.InputSourceTag == TriggerInputSourceTag)
@@ -64,6 +77,14 @@ void UGameplayInputActionTrigger_Gated::OnInputCommandCaptured_Implementation(
 		{
 			FinishTrigger(false, true);
 			return;
+		}
+	}
+	else
+	{
+		if (!bIsGateOpen)
+		{
+			OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Canceled);
+			FinishTrigger(false, true);
 		}
 	}
 
