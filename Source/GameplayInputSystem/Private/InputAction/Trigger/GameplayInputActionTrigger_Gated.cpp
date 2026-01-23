@@ -15,17 +15,25 @@ bool UGameplayInputActionTrigger_Gated::CheckInputCommandCanBeCaptured_Implement
 	{
 		const UGameplayInputAction* InputAction;
 		if (OwningInputAction->GetOwningActionSet()->FindActionByTag(GatedActionTag, InputAction)
-			&& InputAction->IsActive() && InInputCommand.InputSourceTag == TriggerInputSourceTag)
+			&& InputAction->IsActive())
 		{
 			bIsGateOpen = true;
-			return true;
+		}
+		else
+		{
+			// TODO: 目前Gated触发器的Action在被关闭时不会自动关闭触发器，状态会一直保持Pending，目前不会有太大影响，后续需要处理好状态问题
+			bIsGateOpen = false;
 		}
 
-		if (bIsGateOpen)
+		if (bIsGateOpen && InInputCommand.InputSourceTag == TriggerInputSourceTag)
 		{
-			FinishTrigger(false, true);
+			return true;
 		}
-		bIsGateOpen = false;
+		// if (bIsGateOpen)
+		// {
+		// 	FinishTrigger(false, true);
+		// }
+		// bIsGateOpen = false;
 		return false;
 	}
 

@@ -9,6 +9,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayInputSubsystem.generated.h"
 
+class UGameplayInputAction;
 class UGameplayInputActionSet;
 
 /**
@@ -68,6 +69,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
 	void ForceTriggerGameplayInputAction(const FGameplayTag& InputActionTag, EGameplayInputActionEvent ActionState);
 
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Input System")
+	const UGameplayInputAction* FindGameplayInputActionByTag(const FGameplayTag& InputActionTag) const;
+	
 private:
 	void BroadcastGameplayInputEvent(const FGameplayTag& InputSourceTag, EGameplayInputType InputType) const;
 	void BroadcastGameplayInputActionTriggered(const FGameplayTag& InputActionTag,

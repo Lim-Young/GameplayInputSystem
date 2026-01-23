@@ -39,6 +39,11 @@ bool UGameplayInputActionTrigger::CaptureInputCommand(const FGameplayInputSource
 	return false;
 }
 
+bool UGameplayInputActionTrigger::CheckCanActivate_Implementation(FGameplayInputSourceCommand InInputCommand)
+{
+	return CheckInputCommandCanBeCaptured(InInputCommand);
+}
+
 bool UGameplayInputActionTrigger::CheckCanBeginTrigger_Implementation(const FGameplayInputSourceCommand& InInputCommand)
 {
 	return true;
@@ -116,7 +121,7 @@ bool UGameplayInputAction::CheckCanActivateAction(const FGameplayInputSourceComm
 
 	for (UGameplayInputActionTrigger* Trigger : Triggers)
 	{
-		if (Trigger && !Trigger->IsReleasingInputCommands() && Trigger->CheckInputCommandCanBeCaptured(InInputCommand))
+		if (Trigger && !Trigger->IsReleasingInputCommands() && Trigger->CheckCanActivate(InInputCommand))
 		{
 			return true;
 		}
@@ -211,6 +216,11 @@ bool UGameplayInputAction::IsInactive() const
 bool UGameplayInputAction::IsPending() const
 {
 	return CurrentActionState == EGameplayInputActionState::Pending;
+}
+
+EGameplayInputActionState UGameplayInputAction::GetActionState() const
+{
+	return CurrentActionState;
 }
 
 UGameplayInputActionSet* UGameplayInputActionSet::CreateByTemplateObject(const UGameplayInputActionSet* TemplateObject,

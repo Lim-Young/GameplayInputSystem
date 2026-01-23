@@ -31,6 +31,9 @@ public:
 	bool CaptureInputCommand(const FGameplayInputSourceCommand& InInputCommand);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
+	bool CheckCanActivate(FGameplayInputSourceCommand InInputCommand);
+	
+	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
 	bool CheckCanBeginTrigger(const FGameplayInputSourceCommand& InInputCommand);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Gameplay Input Action Trigger")
@@ -141,6 +144,9 @@ public:
 	bool IsActive() const;
 	bool IsInactive() const;
 	bool IsPending() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Input Action")
+	EGameplayInputActionState GetActionState() const;
 };
 
 /**

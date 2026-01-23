@@ -156,6 +156,15 @@ void UGameplayInputSubsystem::ForceTriggerGameplayInputAction(const FGameplayTag
 	BroadcastGameplayInputActionTriggered(InputActionTag, ActionState);
 }
 
+const UGameplayInputAction* UGameplayInputSubsystem::FindGameplayInputActionByTag(
+	const FGameplayTag& InputActionTag) const
+{
+	const UGameplayInputAction* FoundAction;
+	ActiveGameplayInputActionSets.HeapTop()->FindActionByTag(InputActionTag, FoundAction);
+
+	return FoundAction;
+}
+
 void UGameplayInputSubsystem::BroadcastGameplayInputEvent(const FGameplayTag& InputSourceTag,
                                                           const EGameplayInputType InputType) const
 {

@@ -33,8 +33,8 @@ public:
 	
 private:
 	bool bIsGateOpen = false;
-	
-protected:
+
+public:
 	virtual void OnTriggerBegin_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
 	virtual bool
 	CheckInputCommandCanBeCaptured_Implementation(const FGameplayInputSourceCommand& InInputCommand) override;
