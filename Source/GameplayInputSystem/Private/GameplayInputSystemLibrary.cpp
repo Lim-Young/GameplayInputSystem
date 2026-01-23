@@ -15,3 +15,10 @@ void UGameplayInputSystemLibrary::InjectGameplayInput(UObject* WorldContextObjec
 		}
 	}
 }
+
+bool UGameplayInputSystemLibrary::InputActionEventIsMatch(const FGameplayInputActionEventHandle& ActionEventHandle,
+                                                          const FGameplayTag& InInputActionTag,
+                                                          const EGameplayInputActionEvent InInputActionEvent)
+{
+	return ActionEventHandle.IsMatch(InInputActionTag, InInputActionEvent);
+}

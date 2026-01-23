@@ -19,7 +19,7 @@ bool UGameplayInputBufferSchema::HasInputActionEvent(const FGameplayTag& InputAc
 		return false;
 	}
 
-	return InputActions[InputActionEvent].ListenedActionEvents | static_cast<uint8>(ActionEvent);
+	return InputActions[InputActionEvent].ListenedActionEvents >> 1 & static_cast<uint8>(ActionEvent);
 }
 
 FGameplayInputSourceCommandConfig& UGameplayInputBufferSchema::GetInputSourceCommandConfig(

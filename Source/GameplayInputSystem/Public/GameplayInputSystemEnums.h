@@ -9,7 +9,7 @@ enum class EGameplayInputType : uint8
 	Released
 };
 
-UENUM(BlueprintType, meta=(Bitflags))
+UENUM(BlueprintType, meta=(Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
 enum class EGameplayInputActionEvent : uint8
 {
 	None = 0 UMETA(Hidden),
