@@ -22,6 +22,7 @@ bool UGameplayInputActionTrigger_Released::CheckInputCommandCanBeCaptured_Implem
 void UGameplayInputActionTrigger_Released::OnInputCommandCaptured_Implementation(
 	const FGameplayInputSourceCommand& InInputCommand)
 {
+	OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Started);
 	OwningInputAction->BroadcastActionEvent(EGameplayInputActionEvent::Completed);
 	FinishTrigger(true);
 }
